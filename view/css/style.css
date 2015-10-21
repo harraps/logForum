@@ -1,0 +1,222 @@
+/* BASE STYLE */
+body{
+    padding:   0;
+    margin:    0;
+
+    font-size:   12px;
+    font-family: "Lucida Console", Monaco, monospace;
+
+    font-smoothing:         nothing;
+    -moz-font-smoothing:    nothing;
+    -webkit-font-smoothing: nothing;
+}
+
+/* MENU STYLE */
+.menu{
+    padding:    0;
+    margin:     0;
+    width:      100%;
+    text-align: center;
+    background: black;
+    color:      white;
+}
+.menu ul{
+    padding:         0;
+    margin-top:      0;
+    margin-bottom:   0;
+    margin-left:     100px;
+    margin-right:    100px;
+    max-width:       1024px;
+    width:           100%;
+    display:         inline-block;
+    text-align:      left;
+    list-style-type: none;
+}
+.menu ul li{
+    padding:    0;
+    margin:     0;
+    display:    inline-block;
+    text-align: center;
+}
+.menu ul li a{
+    padding-top:     17px;
+    padding-bottom:  17px;
+    padding-left:    5px;
+    padding-right:   5px;
+    margin:          0;
+    display:         block;
+    text-decoration: none;
+    color:           white;
+}
+.menu ul li a:hover{
+    background: white;
+    color:      black;
+}
+
+/* CONTENT STYLE */
+.page{
+    text-align: center;
+    margin-left:  100px;
+    margin-right: 100px;
+}
+.container{
+    display:   inline-block;
+    max-width: 1024px;
+    width:     100%;
+    padding:   0;
+    margin:    0;
+}
+.panel{
+    margin-top:    10px;
+    margin-left:   auto;
+    margin-right:  auto;
+    padding:       10px;
+    text-align:    left;
+    display:       block;
+    border-width:  3px;
+    border-style:  double;
+    border-color:  black;
+}
+
+/* POST STYLE */
+.post .user{
+    display:        inline-block;
+    max-width:      128px;
+    width:          100%;
+    vertical-align: top;
+}
+.post .user .name{
+    margin-bottom: 10px;
+}
+.post .user .date{
+    padding:     0;
+    margin:      0;
+}
+.post .text{
+    display:           inline-block;
+    padding-left:      10px;
+    border-left-width: 1px;
+    border-left-style: solid;
+    border-left-color: black;
+    vertical-align:    top;
+}
+
+/* THREAD STYLE */
+.thread-list ul{
+    padding:         0;
+    margin:          0;
+    list-style-type: none;
+}
+.thread-list ul li{
+    padding:             0;
+    margin:              0;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: black;
+}
+.thread-list ul li a{
+    padding:         0;
+    margin:          0;
+    width:           100%;
+    text-decoration: none;
+    color:           black;
+}
+.thread-list ul li a:hover{
+    background: black;
+    color:      white;
+}
+.thread-list ul li .thread .name{
+    float:  left;
+    margin: 10px;
+}
+.thread-list ul li .thread .info{
+    float:  right;
+    margin: 10px;
+}
+.thread-list ul li .thread.pinned .name{
+    font-weight: bold;
+}
+.thread-list ul li .thread.closed .name{
+    text-decoration: line-through;
+}
+
+/* SECTION STYLE */
+.section-list ul{
+    padding:         0;
+    margin:          0;
+    list-style-type: none;
+}
+.section-list ul li{
+    padding:      0;
+    margin:       2px;
+    width:        200px;
+    display:      inline-block;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.section-list ul li a{
+    padding:         10px;
+    margin:          0;
+    text-decoration: none;
+    color:           black;
+}
+.section-list ul li a:hover{
+    background: black;
+    color:      white;
+}
+.section-list ul li .section .name{
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+.section-list ul li .section .info{
+    text-align: right;
+}
+/* SUB 640PX STYLE */
+@media (max-width: 640px){
+    .menu ul{
+        margin-left:  3px;
+        margin-right: 3px;
+        max-width:    480px;
+    }
+    .container{
+        max-width: 480px;
+    }
+    .page{
+        margin-left:  3px;
+        margin-right: 3px;
+    }
+    .post .user{
+        max-width: 64px;
+    }
+    .post .user .date{
+        font-size: 8px;
+    }
+    .thread-list ul li .thread .info{
+        font-size:    8px;
+        margin-left:  5px;
+        margin-right: 5px;
+    }
+}
+
+/* CLEARFIX EFFECT */
+.clearfix:after{
+    content:     "\00A0";
+    display:     block;
+    clear:       both;
+    height:      0;
+    line-height: 0;
+    visibility:  hidden;
+}
+.clearfix{
+    display: inline-block;
+}
+html[xmlns] .clearfix{
+    display: block;
+}
+* html .clearfix{
+    height: 1%;
+}
+.clearfix{
+    display: block
+}
