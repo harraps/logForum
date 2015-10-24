@@ -3,7 +3,6 @@ require_once('model/BaseObject.php');
 
 class Thread extends BaseObject{
 
-    private int    $id;   // the id of the thread
     private int    $u_id; // the id of the user who created this thread
     private int    $s_id; // the id of the section in which the thread has been created
     private string $name; // the name of the thread
@@ -18,13 +17,11 @@ class Thread extends BaseObject{
         $this->setState    ( $data['t_stat'] );
     }
 
-    protected function setId       ( int      $id    ){ $this->$id   = (int)     $id;   }
     protected function setUserId   ( int      $id    ){ $this->$u_id = (int)     $id;   }
     protected function setSectionId( int      $id    ){ $this->$s_id = (int)     $id;   }
     protected function setName     ( string   $name  ){ $this->$name = (string)  $name; }
     protected function setState    ( int      $state ){ $this->$stat = (int)     $stat; }
 
-    public function getId       (){ return $this->id;   }
     public function getUserId   (){ return $this->u_id; }
     public function getSectionId(){ return $this->s_id; }
     public function getName     (){ return $this->name; }

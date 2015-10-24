@@ -3,7 +3,6 @@ require_once('model/BaseObject.php');
 
 class Section extends BaseObject {
 
-    private int      $id;   // the id of the section
     private int      $u_id; // the id of the user
     private int      $supe; // the id of the parent section
     private string   $name; // the name of the section
@@ -16,12 +15,10 @@ class Section extends BaseObject {
         $this->setPass( $data['s_name'] );
     }
 
-    protected function setId      ( int      $id   ){ $this->$id   = (int)     $id;   }
     protected function setUserId  ( int      $id   ){ $this->$u_id = (int)     $id;   }
     protected function setParentId( int      $id   ){ $this->$supe = (int)     $id;   }
     protected function setName    ( string   $name ){ $this->$name = (string)  $name; }
 
-    public function getId      (){ return $this->id;   }
     public function getUserId  (){ return $this->u_id; }
     public function getParentId(){ return $this->supe; }
     public function getName    (){ return $this->name; }

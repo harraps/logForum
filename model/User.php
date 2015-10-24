@@ -3,7 +3,6 @@ require_once('model/BaseObject.php');
 
 class User extends BaseObject{
 
-    private int      $id;   // the id of the user
     private string   $name; // the name of the user
     private string   $mail; // the email of the user
     private string   $pass; // the crypted password of the user
@@ -20,14 +19,12 @@ class User extends BaseObject{
         $this->setPerm( $data['u_perm'] );
     }
 
-    protected function setId  ( int      $id   ){ $this->$id   = (int)     $id;   }
     protected function setName( string   $name ){ $this->$name = (string)  $name; }
     protected function setMail( string   $mail ){ $this->$mail = (string)  $mail; }
     protected function setPass( string   $pass ){ $this->$pass = (string)  $pass; }
     protected function setDate( DateTime $date ){ $this->$date = (DateTime)$date; }
     protected function setPerm( int      $perm ){ $this->$perm = (int)     $perm; }
 
-    public function getId  (){ return $this->id;   }
     public function getName(){ return $this->name; }
     public function getMail(){ return $this->mail; }
     public function getPass(){ return $this->pass; }

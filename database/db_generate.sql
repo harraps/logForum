@@ -20,13 +20,15 @@ CREATE TABLE `User` (
 
 -- Table for posts
 CREATE TABLE `Post` (
-    `p_date` TIMESTAMP     DEFAULT CURRENT_TIMESTAMP COMMENT "the time at which the message has been posted",
+    `p_id`   INT           AUTO_INCREMENT            COMMENT "the id of the post",
     `u_id`   INT           NOT NULL                  COMMENT "the id of the user who posted this message",
     `t_id`   INT           NOT NULL                  COMMENT "the id of the thread in which the message has been posted",
+    `p_date` TIMESTAMP     DEFAULT CURRENT_TIMESTAMP COMMENT "the time at which the message has been posted",
     `p_text` VARCHAR(2048) NOT NULL                  COMMENT "the message that has been posted",
-    INDEX (`p_date`), -- we want to order the posts by their date
-    FOREIGN KEY (`u_id`) REFERENCES `User`  (`u_id`), -- each post is linked to one user
-    FOREIGN KEY (`t_id`) REFERENCES `Thread`(`t_id`)  -- each post is linked to one thread
+    PRIMARY KEY (`p_id`  ), -- each post has an unique id to identify it
+    INDEX       (`p_date`), -- we want to order the posts by their date
+    FOREIGN KEY (`u_id`  ) REFERENCES `User`  (`u_id`), -- each post is linked to one user
+    FOREIGN KEY (`t_id`  ) REFERENCES `Thread`(`t_id`)  -- each post is linked to one thread
 )ENGINE=InnoDB CHARSET=utf8 COMMENT="contains the posts made on the forum";
 
 -- Table for threads
