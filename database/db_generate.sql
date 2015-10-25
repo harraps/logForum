@@ -33,11 +33,12 @@ CREATE TABLE `Post` (
 
 -- Table for threads
 CREATE TABLE `Thread` (
-    `t_id`   INT         AUTO_INCREMENT  COMMENT "the id of the thread",
-    `u_id`   INT         NOT NULL        COMMENT "the id of the creator of the thread",
-    `s_id`   INT         NOT NULL        COMMENT "the id of the section in which the thread is stored",
-    `t_name` VARCHAR(40) NOT NULL        COMMENT "the name of the thread",
-    `t_stat` INT         DEFAULT 0       COMMENT "the state of the thread", -- follow a mask to specify its state (ex: pinned, closed, ...)
+    `t_id`   INT         AUTO_INCREMENT            COMMENT "the id of the thread",
+    `u_id`   INT         NOT NULL                  COMMENT "the id of the creator of the thread",
+    `s_id`   INT         NOT NULL                  COMMENT "the id of the section in which the thread is stored",
+    `t_name` VARCHAR(40) NOT NULL                  COMMENT "the name of the thread",
+    `t_date` TIMESTAMP   DEFAULT CURRENT_TIMESTAMP COMMENT "the date of last post made in this thread",
+    `t_stat` INT         DEFAULT 0                 COMMENT "the state of the thread", -- follow a mask to specify its state (ex: pinned, closed, ...)
     PRIMARY KEY (`t_id`   ), -- each thread has an unique id to identify it
     UNIQUE      (`t_title`), -- each thread has a unique name
     FOREIGN KEY (`u_id`   ) REFERENCES `User`    (`u_id`), -- each thread has been created by one user

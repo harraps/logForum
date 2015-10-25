@@ -11,8 +11,7 @@ class UserManager {
     }
 
     public function getUser ( int $id ){
-        $id = (int) $id;
-        $q = $this->db->query('SELECT * FROM `User` WHERE `u_id` = '.$id);
+        $q = $this->getInstance( 'User', 'u_id', $id );
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){ // there is only one user for this id at most
             return new User( $data );
         }

@@ -4,13 +4,22 @@ require_once('model/Post.php');
 
 class PostManager extends BaseManager{
 
-        public function getPostsFromUser   ( int $id ){ return $this->getPost($id,'u_id'); }
-        public function getPostsFromThread ( int $id ){ return $this->getPost($id,'t_id'); }
+        public function getPost( int $id ){
+            $q = $this->getInstance( 'Post', 'p_id', $id );
+            if( $data = $q->fetch(PDO::FETCH_ASSOC) ){ // there is only one post for this id at most
+                return new Post( $data );
+            }
+        }
 
-        protected function getPostsFrom ( int $id, string $column ){
-            $id = (int) $id;
+        public function getPostsFromUser   ( int $id, int $page, int $number ){
+            return $this->getPostsFrom('u_id',$id,$page,$number);
+        }
+        public function getPostsFromThread ( int $id, int $page, int $number ){
+            return $this->getPostsFrom('t_id',$id,$page,$number);
+        }
+        protected function getPostsFrom( string $column, int $id, int $page, int $number ){
+            $q = $this->getInstancesFrom('Post',$column,$id,$page,$number,'p_date',TRUE);
             $posts = [];
-            $q = $this->db->query('SELECT * FROM `Post` WHERE `'.$column.'` = '.$id);
             while( $data = $q->fetch(PDO::FETCH_ASSOC) ){
                 $posts[] = new Post( $data );
             }
