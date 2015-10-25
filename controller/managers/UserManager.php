@@ -18,28 +18,24 @@ class UserManager {
     }
 
     public function create( string $name, string $mail, string $pass, int $perm ){
-        $sql = "INSERT INTO `User` (`u_name`,`u_mail`,`u_pass`)"
-            ." VALUES ("
-            ."'".$name."',"
-            ."'".$mail."',"
-            ."'".$pass."');";
-        $this->db->exec($sql);
-        $q = $this->db->query('SELECT * FROM `User` WHERE `u_id` = LAST_INSERT_ID()');
+        $q = $this->createObject('User','u_id',[
+            'u_name' => $name,
+            'u_mail' => $mail,
+            'u_pass' => $pass,
+            'u_perm' => $perm
+        ]);
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
             return new User( $data );
         }
     }
 
     public function update( User $user ){
-        $sql = "UPDATE `User`"
-            ." SET "
-            ."`u_name` = ".$user->getName()."',"
-            ."`u_mail` = ".$user->getMail()."',"
-            ."`u_pass` = ".$user->getPass()."',"
-            ."`u_perm` = ".$user->getPerm()."'"
-            ." WHERE "
-            ."`u_id`   = '".$user->getId ()."';";
-        $this->db->exec($sql);
+        $this->updateObject('User','u_id',$user->getId(),[
+            'u_name' => $user->getName(),
+            'u_mail' => $user->getMail(),
+            'u_pass' => $user->getPass(),
+            'u_perm' => $user->getPerm()
+        ]);
     }
 
 }

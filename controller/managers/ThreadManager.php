@@ -26,27 +26,24 @@ class ThreadManager extends BaseManager{
         return $threads;
     }
 
-    public function create( int $u_id, int $t_id, string $text ){
-        $sql = "INSERT INTO `Thread` (`u_id`,`s_id`,`t_name`)"
-            ." VALUES ("
-            ."'".$u_id."',"
-            ."'".$s_id."',"
-            ."'".$name."');";
-        $this->db->exec($sql);
-        $q = $this->db->query('SELECT * FROM `Thread` WHERE `t_id` = LAST_INSERT_ID()');
+    public function create( int $u_id, int $t_id, string $name ){
+        $q = $this->createObject('Thread','t_id',[
+            'u_id'   => $u_id,
+            't_id'   => $t_id,
+            't_name' => $name
+        ]);
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
             return new Thread( $data );
         }
     }
 
     public function update( Thread $thread ){
-        $sql = "UPDATE `Thread`"
-            ." SET "
-            ."`s_id`   = ".$thread->getSectionId()."',"
-            ."`t_name` = ".$thread->getName     ()."',"
-            ."`t_stat` = ".$thread->getState    ()."'"
-            ." WHERE "
-            ."`t_id`   = '".$thread->getId      ()."';";
-        $this->db->exec($sql);
+        $this->updateObject('Thread','t_id',$thread->getId(),[
+            'u_id'   => $thread->getUserId   (),
+            's_id'   => $thread->getSectionId(),
+            't_name' => $thread->getName     (),
+            't_date' => $thread->getDate     (),
+            't_stat' => $thread->getState    ()
+        ]);
     }
 }

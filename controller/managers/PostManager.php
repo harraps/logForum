@@ -27,26 +27,27 @@ class PostManager extends BaseManager{
         }
 
         public function create( int $u_id, int $t_id, string $text ){
-            $sql = "INSERT INTO `Post` (`u_id`,`t_id`,`text`)"
-                ." VALUES ("
-                ."'".$u_id."',"
-                ."'".$t_id."',"
-                ."'".$text."');";
-            $this->db->exec($sql);
-            $q = $this->db->query('SELECT * FROM `Post` WHERE `p_id` = LAST_INSERT_ID()');
+
+            $q = $this->createObject('Post','p_id',[
+                'u_id'   => $u_id,
+                't_id'   => $t_id,
+                'p_text' => $text
+            ]);
             if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
+                // we update the date of the thread
+                $q2 = $this->db->prepare(
+                    'UPDATE `Thread` SET `t_date` = CURRENT_TIMESTAMP WHERE `t_id` = :t_id ;'
+                );
+                $q2->bindParam(':t_id', $t_id, PDO::PARAM_INT);
+                $q2->execute();
+
                 return new Post( $data );
             }
         }
 
         public function update( Post $post ){
-            $sql = "UPDATE `Post`"
-                ." SET "
-                ."`p_text` = '".$post->getText    ()."'"
-                ." WHERE "
-                ."`p_date` = '".$post->getDate    ()."',"
-                ."`u_id`   = '".$post->getUserId  ()."',"
-                ."`t_id`   = '".$post->getThreadId()."';";
-            $this->db->exec($sql);
+            $this->updateObject('Post','p_id',$post->getId(),[
+                'p_text' => $post->getText()
+            ]);
         }
 }

@@ -58,4 +58,66 @@ abstract class BaseManager {
         return $q;
     }
 
+    protected function createObject( string $table, string $id, array $data ){
+        reset( $data );
+        $first = key( $data );
+        $params = "(";
+        $values = "(";
+        foreach( $data as $key => $value ){
+            if( $key === $first ){ // if first, we don't add a comma
+                $params .= " :".$key;
+                $values .= " :".$value;
+            }else{
+                $params .= ", :".$key;
+                $values .= ", :".$value;
+            }
+        }
+        $params .= " )";
+        $values .= " )";
+
+        $q = $this->db->prepare(
+            "INSERT INTO :table ".params." VALUES ".$values.";"
+        );
+        $q->bindParam(':table', $table, PDO::PARAM_STR);
+        foreach( $data as $key => $value ){
+            $q->bindParam(':'.$key,   $key,  PDO::PARAM_STR);
+            $q->bindParam(':'.$value, $value );
+        }
+        $q->execute();
+
+        // we recover the object we just created
+        $q = $this->db->prepare('SELECT * FROM :table WHERE :id = LAST_INSERT_ID()');
+        $q->bindParam(':table', $table, PDO::PARAM_STR);
+        $q->bindParam(':id'   , $id   , PDO::PARAM_INT);
+        $q->execute();
+        return $q;
+    }
+
+    protected function updateObject( string $table, string $column, int $id, array $data ){
+        reset( $data );
+        $first = key( $data );
+        $values = "";
+        foreach( $data as $key => $value ){
+            if( $key === $first ){ // if first, we don't add a comma
+                $values .= " :".$key." = :".$value;
+            }else{
+                $values .= ", :".$key." = :".$value;
+            }
+        }
+
+        $q = $this->db->prepare(
+            "UPDATE :table SET ".params." WHERE :column = :id ;"
+        );
+        $q->bindParam(':table',  $table,  PDO::PARAM_STR);
+        $q->bindParam(':column', $column, PDO::PARAM_STR);
+        $q->bindParam(':id',     $id,     PDO::PARAM_INT);
+        foreach( $data as $key => $value ){
+            $q->bindParam(':'.$key,   $key,  PDO::PARAM_STR);
+            $q->bindParam(':'.$value, $value );
+        }
+        $q->execute();
+    }
+
+
+
 }
