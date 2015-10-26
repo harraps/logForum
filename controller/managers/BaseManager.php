@@ -5,11 +5,15 @@ abstract class BaseManager {
 
     protected PDO $db;
 
-    public function __construct( PDO $db ){
+    protected function __construct( PDO $db ){
         $this->db = $db;
     }
 
-    protected function getInstance( string $table, string $column, int $id ){
+    protected function getInstance(
+        string $table,
+        string $column,
+        int    $id
+    ){
         $id = (int) $id;
         $q = $this->db->prepare(
             "SELECT * FROM :table WHERE :column = :id ;"
@@ -28,7 +32,8 @@ abstract class BaseManager {
         int    $page,
         int    $number,
         string $order       = NULL,
-        bool   $isAscending = NULL
+               $isAscending = FALSE,
+               $checkId     = TRUE
     ){
         $id     = (int) $id;
         $page   = (int) $page;
@@ -40,15 +45,17 @@ abstract class BaseManager {
 
         $q = $this->db->prepare(
             "SELECT * FROM :table"
-            ." WHERE :column = :id"
+            .( $checkId  ? " WHERE :column = :id"     : "" )
             .( $hasOrder ? " ORDER_BY :order :ascend" : "" )
             ." LIMIT :start, :number ;"
         );
         $q->bindParam(':table' , $table , PDO::PARAM_STR);
-        $q->bindParam(':column', $column, PDO::PARAM_STR);
-        $q->bindParam(':id'    , $id    , PDO::PARAM_INT);
         $q->bindParam(':start' , $start , PDO::PARAM_INT);
         $q->bindParam(':number', $number, PDO::PARAM_INT);
+        if( $checkId ){
+            $q->bindParam(':column', $column, PDO::PARAM_STR);
+            $q->bindParam(':id'    , $id    , PDO::PARAM_INT);
+        }
         if( $hasOrder ){
             $ascend = ( $isAscending ? 'ASC' : 'DESC' );
             $q->bindParam(':order' , $order , PDO::PARAM_STR);
@@ -58,7 +65,36 @@ abstract class BaseManager {
         return $q;
     }
 
-    protected function createObject( string $table, string $id, array $data ){
+    protected function getNbPagesFrom (
+        string $table,
+        string $column,
+        int    $id,
+        int    $number,
+               $checkId = TRUE
+    ){
+        $id     = (int) $id;
+        $number = (int) $number;
+
+        $q = $this->db->prepare(
+            "SELECT COUNT(*) AS `count` FROM :table"
+            .( $checkId ? " WHERE :column = :id ;" : ";")
+        );
+        $q->bindParam(':table' , $table , PDO::PARAM_STR);
+        if( $checkId ){
+            $q->bindParam(':column', $column, PDO::PARAM_STR);
+            $q->bindParam(':id'    , $id    , PDO::PARAM_INT);
+        }
+        $q->execute();
+        if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
+            return ceil( $data['count'] / $number );
+        }
+    }
+
+    protected function createObject(
+        string $table,
+        string $id,
+        array  $data
+    ){
         reset( $data );
         $first = key( $data );
         $params = "(";
@@ -93,7 +129,12 @@ abstract class BaseManager {
         return $q;
     }
 
-    protected function updateObject( string $table, string $column, int $id, array $data ){
+    protected function updateObject(
+        string $table,
+        string $column,
+        int    $id,
+        array  $data
+    ){
         reset( $data );
         $first = key( $data );
         $values = "";
@@ -117,7 +158,4 @@ abstract class BaseManager {
         }
         $q->execute();
     }
-
-
-
 }

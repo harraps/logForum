@@ -4,17 +4,31 @@ require_once('model/User.php');
 
 class UserManager {
 
-    private DBAccess $dbAccess;
+    private int $nbEnt;
 
-    public function __construct( DBAccess $dbAccess ){
-        $this->dbAccess = $dbAccess;
+    public function __construct( PDO $db, int $nbEnt ){
+        parent::__construct($db);
+        $this->nbEnt = $nbEnt;
     }
 
-    public function getUser ( int $id ){
-        $q = $this->getInstance( 'User', 'u_id', $id );
+    public function getUser( int $id ){
+        $q = $this->getInstance('User','u_id',$id);
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){ // there is only one user for this id at most
             return new User( $data );
         }
+    }
+
+    public function getUsers( int $page ){
+        $q = $this->getInstancesFrom('User','u_id',0,$page,$this->nbEnt,'u_name',TRUE,TRUE);
+        $users = [];
+        while( $data = $q->fetch(PDO::FETCH_ASSOC) ){
+            $users[] = new User( $data );
+        }
+        return $users;
+    }
+
+    public function getNbPages(){
+        return $this->getNbPagesFrom('User','u_id',0,$this->nbEnt,FALSE);
     }
 
     public function create( string $name, string $mail, string $pass, int $perm ){

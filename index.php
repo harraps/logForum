@@ -19,18 +19,23 @@
             include_once('view/common/menu.php'); // we add the menu of the website
 
             // we recover the page the user wants to display
-            $PAGE = "home";
+            string $VIEW = "home";
+            if( isset($_GET['VIEW']) ){
+                $VIEW = (string) $_GET['VIEW'];
+            }
+            $URL = $ROOT_URL."?VIEW=".$VIEW;
+            int $PAGE = 0;
             if( isset($_GET['PAGE']) ){
-                $PAGE = $_GET['PAGE'];
+                $PAGE = (int) $_GET['PAGE'];
             }
 
-            switch( $PAGE ){
-                case "home"     : include_once('view/common/home.php'    ); break;
-                case "signin"   : include_once('view/identify/signin.php'); break;
-                case "login"    : include_once('view/identify/login.php' ); break;
-                case "category" : include_once('view/forum/category.php' ); break;
-                case "thread"   : include_once('view/forum/thread.php'   ); break;
-                default         : include_once('view/common/home.php'    ); break;
+            switch( $VIEW ){
+                case "home"    : include_once('view/common/home.php'    ); break;
+                case "signin"  : include_once('view/identify/signin.php'); break;
+                case "login"   : include_once('view/identify/login.php' ); break;
+                case "section" : include_once('view/forum/section.php'  ); break;
+                case "thread"  : include_once('view/forum/thread.php'   ); break;
+                default        : include_once('view/common/home.php'    ); break;
             }
         ?>
     </body>

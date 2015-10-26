@@ -4,6 +4,15 @@ require_once('model/Thread.php');
 
 class ThreadManager extends BaseManager{
 
+    private $nbEnt_u; // number of threads per page for users
+    private $nbEnt_s; // number of threads per page for sections
+
+    public function __construct( PDO $db, int $nbEnt_u, int $nbEnt_s ){
+        parent::__construct($db);
+        $this->nbEnt_u = (int) $nbEnt_u;
+        $this->nbEnt_s = (int) $nbEnt_s;
+    }
+
     public function getThread ( int $id ){
         $q = $this->getInstance( 'Thread', 't_id', $id );
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){ // there is only one thread for this id at most
@@ -11,11 +20,11 @@ class ThreadManager extends BaseManager{
         }
     }
 
-    public function getThreadsFromUser     ( int $id, int $page, int $number ){
-        return $this->getThreadFrom('u_id',$id,$page,$number);
+    public function getThreadsFromUser    ( int $id, int $page ){
+        return $this->getThreadFrom('u_id',$id,$page,$this->nbEnt_u);
     }
-    public function getThreadsFromCategory ( int $id, int $page, int $number ){
-        return $this->getThreadFrom('c_id',$id,$page,$number);
+    public function getThreadsFromSection ( int $id, int $page ){
+        return $this->getThreadFrom('s_id',$id,$page,$this->nbEnt_s);
     }
     protected function getThreadsFrom ( string $column, int $id, int $page, int $number ){
         $q = $this->getInstancesFrom('Thread',$column,$id,$page,$number,'t_date',TRUE);
@@ -24,6 +33,13 @@ class ThreadManager extends BaseManager{
             $threads[] = new Thread( $data );
         }
         return $threads;
+    }
+
+    public function getNbPagesFromUser( int $id ){
+        return $this->getNbPagesFrom('Thread','u_id',$id,$this->nbEnt_u);
+    }
+    public function getNbPagesFromSection( int $id ){
+        return $this->getNbPagesFrom('Thread','s_id',$id,$this->nbEnt_s);
     }
 
     public function create( int $u_id, int $t_id, string $name ){

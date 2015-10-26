@@ -87,6 +87,9 @@ body{
 }
 .post .user .name{
     margin-bottom: 10px;
+    white-space:   nowrap;
+    overflow:      hidden;
+    text-overflow: ellipsis;
 }
 .post .user .date{
     padding:     0;
@@ -126,15 +129,20 @@ body{
     color:      white;
 }
 .thread-list ul li .thread .name{
-    float:  left;
-    margin: 10px;
+    float:         left;
+    margin:        10px;
+    max-width:     230px;
+    white-space:   nowrap;
+    overflow:      hidden;
+    text-overflow: ellipsis;
 }
 .thread-list ul li .thread .info{
-    float:  right;
-    margin: 10px;
+    float:      right;
+    margin:     10px;
+    width:      135px;
 }
 .thread-list ul li .thread.pinned .name{
-    font-weight: bold;
+    text-transform: uppercase;
 }
 .thread-list ul li .thread.closed .name{
     text-decoration: line-through;
@@ -142,14 +150,14 @@ body{
 
 /* SECTION STYLE */
 .section-list ul{
-    padding:         0;
-    margin:          0;
-    list-style-type: none;
+    padding:    0;
+    margin:     0;
+    list-style: none;
 }
 .section-list ul li{
     padding:      0;
     margin:       2px;
-    width:        200px;
+    width:        188px;
     display:      inline-block;
     border-width: 1px;
     border-style: solid;
@@ -167,11 +175,53 @@ body{
 }
 .section-list ul li .section .name{
     text-decoration: underline;
-    margin-bottom: 10px;
+    margin-bottom:   10px;
+    white-space:     nowrap;
+    overflow:        hidden;
+    text-overflow:   ellipsis;
 }
 .section-list ul li .section .info{
     text-align: right;
 }
+
+/* PAGINATION STYLE */
+.pagination{
+    text-align: center;
+}
+.pagination ul{
+    padding:    0;
+    margin:     0;
+    list-style: none;
+}
+.pagination ul li{
+    padding: 0;
+    margin:  0;
+    display: inline-block;
+}
+.pagination ul li a{
+    padding:         2px;
+    margin:          0;
+    min-width:       20px;
+    border-width:    1px;
+    border-style:    solid;
+    border-color:    black;
+    text-decoration: none;
+    display:         block;
+    color:           black;
+}
+.pagination ul li a:hover{
+    background: black;
+    color:      white;
+}
+.pagination ul li a:hover.disable{
+    background: white;
+    color:      black;
+}
+.pagination ul li .active{
+    background: black;
+    color:      white;
+}
+
 /* SUB 640PX STYLE */
 @media (max-width: 640px){
     .menu ul{
@@ -192,10 +242,20 @@ body{
     .post .user .date{
         font-size: 8px;
     }
+    .thread-list ul li .thread .name{
+        max-width: 129px;
+    }
     .thread-list ul li .thread .info{
+        width:        95px;
         font-size:    8px;
         margin-left:  5px;
         margin-right: 5px;
+    }
+    .section-list ul li{
+        width: 117px;
+    }
+    .section-list ul li .section .info{
+        font-size: 8px;
     }
 }
 

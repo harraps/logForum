@@ -13,7 +13,7 @@
             <ul>
                 <li><a href="#">Home    </a></li>
                 <li><a href="#">Sections</a></li>
-                <li><a href="#">Chat    </a></li>
+                <li><a href="#">Chat    </a></li> <!-- http://code.tutsplus.com/tutorials/how-to-create-a-simple-web-based-chat-application--net-5931 -->
                 <li><a href="#">Identify</a></li>
             </ul>
         </div>
@@ -28,8 +28,20 @@
                 <div class="panel post">
                     <div class="user">
                         <div class="name">USER</div>
-                        <div class="date">2015-10-08</div>
-                        <div class="date">12:45:39  </div>
+                        <div class="date">2015-10-08 12:45:39</div>
+                    </div>
+                    <div class="text">
+                        Hello !<br/>
+                        Halo !<br/>
+                        Hola !<br/>
+                        Bonjour !<br/>
+                    </div>
+                </div>
+
+                <div class="panel post">
+                    <div class="user">
+                        <div class="name">Too long USER name long long long</div>
+                        <div class="date">2015-10-08 12:45:39</div>
                     </div>
                     <div class="text">
                         Hello !<br/>
@@ -41,6 +53,20 @@
 
                 <div class="panel section-list">
                     <ul>
+                        <li>
+                            <a href="#" class="clearfix section">
+                                <div class="name">Really way too Long Section name</div>
+                                <div class="info">Last Thread</div>
+                                <div class="info">2015-10-08 12:45:39</div>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="clearfix section">
+                                <div class="name">Section name</div>
+                                <div class="info">Last Thread</div>
+                                <div class="info">2015-10-08 12:45:39</div>
+                            </a>
+                        </li>
                         <li>
                             <a href="#" class="clearfix section">
                                 <div class="name">Section name</div>
@@ -69,33 +95,41 @@
                     <ul>
                         <li>
                             <a href="#" class="clearfix thread pinned">
+                                <div class="info">2015-10-08 12:45:39</div>
                                 <div class="name">Thread 1</div>
-                                <div class="info">Titi 2015-10-08 12:45:39</div>
                             </a>
                         </li>
                         <li>
                             <a href="#" class="clearfix thread pinned closed">
+                                <div class="info">2015-10-08 12:45:39</div>
                                 <div class="name">Thread 1</div>
-                                <div class="info">Momo 2015-10-08 12:45:39</div>
                             </a>
                         </li>
                         <li>
                             <a href="#" class="clearfix thread closed">
-                                <div class="name">Thread 1</div>
-                                <div class="info">Pierre 2015-10-08 12:45:39</div>
+                                <div class="info">2015-10-08 12:45:39</div>
+                                <div class="name">Too long Thread name i am annoying with long names</div>
                             </a>
                         </li>
                         <li>
                             <a href="#" class="clearfix thread">
+                                <div class="info">2015-10-08 12:45:39</div>
                                 <div class="name">Thread 1</div>
-                                <div class="info">Jean 2015-10-08 12:45:39</div>
                             </a>
                         </li>
                     </ul>
                 </div>
 
-                <div>
-
+                <div class="panel pagination">
+                    <ul>
+                        <li><a href="#" class="disable"><<</a></li>
+                        <li><a href="#">1</a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#" class="active" >3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">>></a></li>
+                    </ul>
                 </div>
 
             </div>
