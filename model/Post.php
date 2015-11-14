@@ -3,10 +3,10 @@ require_once('model/BaseObject.php');
 
 class Post extends BaseObject{
 
-    private int      $u_id; // the id of the user who posted this message
-    private int      $t_id; // the id of the thread in which the message has been posted
-    private DateTime $date; // the time at which the message has been posted
-    private string   $text; // the text of the message
+    private $u_id; // int      : the id of the user who posted this message
+    private $t_id; // int      : the id of the thread in which the message has been posted
+    private $date; // DateTime : the time at which the message has been posted
+    private $text; // string   : the text of the message
 
     // constructor to recover post from database
     public function __construct( array $data ){
@@ -17,10 +17,10 @@ class Post extends BaseObject{
         $this->setText    ( $data['p_text'] );
     }
 
-    protected function setUserId  ( int      $id   ){ $this->$u_id = (int)     $id;   }
-    protected function setThreadId( int      $id   ){ $this->$t_id = (int)     $id;   }
-    protected function setDate    ( DateTime $date ){ $this->$date = (DateTime)$date; }
-    protected function setText    ( string   $text ){ $this->$text = (string)  $text; }
+    protected function setUserId  ( int      $id   ){ $this->$u_id = (int)    $id;   }
+    protected function setThreadId( int      $id   ){ $this->$t_id = (int)    $id;   }
+    protected function setDate    ( DateTime $date ){ $this->$date =          $date; }
+    protected function setText    ( string   $text ){ $this->$text = (string) $text; }
 
     public function getUserId  (){ return $this->u_id; }
     public function getThreadId(){ return $this->t_id; }

@@ -8,12 +8,12 @@ require_once('controller/managers/SectionManager.php');
 
 class Controller {
 
-    private PDO $db;
+    private $db; // PDO
 
-    private UserManager    $u_man;
-    private PostManager    $p_man;
-    private ThreadManager  $t_man;
-    private SectionManager $s_man;
+    private $u_man; // UserManager
+    private $p_man; // PostManager
+    private $t_man; // ThreadManager
+    private $s_man; // SectionManager
 
     public function __construct(){
         // we recover the data in the ini file

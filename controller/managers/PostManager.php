@@ -7,7 +7,9 @@ class PostManager extends BaseManager{
     private $nbEnt_u; // number of posts per page for users
     private $nbEnt_t; // number of posts per page for threads
 
-    public function __construct( PDO $db, int $nbEnt_u, int $nbEnt_t ){
+    public function __construct( PDO $db, $nbEnt_u, $nbEnt_t ){
+        $nbEnt_u = (int) $nbEnt_u;
+        $nbEnt_t = (int) $nbEnt_t;
         parent::__construct($db);
         $this->nbEnt_u = (int) $nbEnt_u;
         $this->nbEnt_t = (int) $nbEnt_t;

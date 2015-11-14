@@ -3,9 +3,9 @@ require_once('model/BaseObject.php');
 
 class Section extends BaseObject {
 
-    private int      $u_id; // the id of the user
-    private int      $supe; // the id of the parent section
-    private string   $name; // the name of the section
+    private $u_id; // int      : the id of the user
+    private $supe; // int      : the id of the parent section
+    private $name; // string   : the name of the section
 
     // constructor to recover section from database
     public function __construct( array $data ){
@@ -44,4 +44,12 @@ class Section extends BaseObject {
             ->getSectionManager()
             ->getSectionsFromParent($this->$id);
     }
+
+    public function update(){
+        global $CONTROLLER;
+        return $CONTROLLER
+            ->getSectionManager()
+            ->update( $this );
+    }
+
 }

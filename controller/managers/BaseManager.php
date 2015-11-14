@@ -3,7 +3,7 @@ require_once('controller/Controller.php');
 
 abstract class BaseManager {
 
-    protected PDO $db;
+    protected $db; // PDO
 
     protected function __construct( PDO $db ){
         $this->db = $db;

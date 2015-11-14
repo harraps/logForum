@@ -3,11 +3,11 @@ require_once('model/BaseObject.php');
 
 class User extends BaseObject{
 
-    private string   $name; // the name of the user
-    private string   $mail; // the email of the user
-    private string   $pass; // the crypted password of the user
-    private DateTime $date; // the inscription date of the user
-    private int      $perm; // the permissions of the user based on a mask
+    private $name; // string   : the name of the user
+    private $mail; // string   : the email of the user
+    private $pass; // string   : the crypted password of the user
+    private $date; // DateTime : the inscription date of the user
+    private $perm; // int      : the permissions of the user based on a mask
 
     // constructor to recover user from database
     public function __construct( array $data ){
@@ -19,11 +19,11 @@ class User extends BaseObject{
         $this->setPerm( $data['u_perm'] );
     }
 
-    protected function setName( string   $name ){ $this->$name = (string)  $name; }
-    protected function setMail( string   $mail ){ $this->$mail = (string)  $mail; }
-    protected function setPass( string   $pass ){ $this->$pass = (string)  $pass; }
-    protected function setDate( DateTime $date ){ $this->$date = (DateTime)$date; }
-    protected function setPerm( int      $perm ){ $this->$perm = (int)     $perm; }
+    protected function setName( string   $name ){ $this->name = (string) $name; }
+    protected function setMail( string   $mail ){ $this->mail = (string) $mail; }
+    protected function setPass( string   $pass ){ $this->pass = (string) $pass; }
+    protected function setDate( DateTime $date ){ $this->date =          $date; }
+    protected function setPerm( int      $perm ){ $this->perm = (int)    $perm; }
 
     public function getName(){ return $this->name; }
     public function getMail(){ return $this->mail; }
@@ -51,6 +51,13 @@ class User extends BaseObject{
         return $CONTROLLER
             ->getSectionManager()
             ->getSectionsFromUser($this->id);
+    }
+
+    public function update(){
+        global $CONTROLLER;
+        return $CONTROLLER
+            ->getUserManager()
+            ->update( $this );
     }
 
 }

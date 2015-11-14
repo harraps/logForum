@@ -1,6 +1,6 @@
 <?php
     $ROOT_DIR = "";            // we set the ROOT directory relatively to this file
-    $ROOT_URL = "/MiniForum/"; // we set the ROOT URL of this project
+    $ROOT_URL = "/miniForum/"; // we set the ROOT URL of this project
     require_once('controller/Controller.php');
 ?>
 <!DOCTYPE html>
@@ -19,12 +19,12 @@
             include_once('view/common/menu.php'); // we add the menu of the website
 
             // we recover the page the user wants to display
-            string $VIEW = "home";
+            $VIEW = "home";
             if( isset($_GET['VIEW']) ){
                 $VIEW = (string) $_GET['VIEW'];
             }
             $URL = $ROOT_URL."?VIEW=".$VIEW;
-            int $PAGE = 0;
+            $PAGE = 0;
             if( isset($_GET['PAGE']) ){
                 $PAGE = (int) $_GET['PAGE'];
             }

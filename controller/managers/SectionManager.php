@@ -7,7 +7,9 @@ class SectionManager extends BaseManager{
     private $nbEnt_u; // number of sections per page for users
     private $nbEnt_s; // number of sections per page for parent sections
 
-    public function __construct( PDO $db, int $nbEnt_u, int $nbEnt_s ){
+    public function __construct( PDO $db, $nbEnt_u, $nbEnt_s ){
+        $nbEnt_u = (int) $nbEnt_u;
+        $nbEnt_s = (int) $nbEnt_s;
         parent::__construct($db);
         $this->nbEnt_u = (int) $nbEnt_u;
         $this->nbEnt_s = (int) $nbEnt_s;

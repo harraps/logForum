@@ -1,12 +1,13 @@
 <?php
-require_once('database/DBAccess.php');
+require_once('controller/managers/BaseManager.php');
 require_once('model/User.php');
 
-class UserManager {
+class UserManager extends BaseManager{
 
-    private int $nbEnt;
+    private $nbEnt;
 
-    public function __construct( PDO $db, int $nbEnt ){
+    public function __construct( PDO $db, $nbEnt ){
+        $nbEnt = (int) $nbEnt;
         parent::__construct($db);
         $this->nbEnt = $nbEnt;
     }
