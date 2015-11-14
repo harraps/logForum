@@ -3,16 +3,16 @@ require_once('model/BaseObject.php');
 
 class Section extends BaseObject {
 
-    private $u_id; // int      : the id of the user
-    private $supe; // int      : the id of the parent section
-    private $name; // string   : the name of the section
+    private $u_id; // int    : the id of the user
+    private $supe; // int    : the id of the parent section
+    private $name; // string : the name of the section
 
     // constructor to recover section from database
     public function __construct( array $data ){
-        $this->setId  ( $data['s_id'  ] );
-        $this->setName( $data['u_id'  ] );
-        $this->setMail( $data['s_supe'] );
-        $this->setPass( $data['s_name'] );
+        $this->setId      ( $data['s_id'  ] );
+        $this->setUserId  ( $data['u_id'  ] );
+        $this->setParentId( $data['s_supe'] );
+        $this->setName    ( $data['s_name'] );
     }
 
     protected function setUserId  ( int      $id   ){ $this->$u_id = (int)     $id;   }

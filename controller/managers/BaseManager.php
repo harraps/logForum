@@ -10,11 +10,13 @@ abstract class BaseManager {
     }
 
     protected function getInstance(
-        string $table,
-        string $column,
-        int    $id
+        $table,  // string : the name of the table we want to get the instane from
+        $column, // string : the name of the column of the instance id
+        $id      // int    : the instance id we want
     ){
-        $id = (int) $id;
+        $table  = (string) $table;
+        $column = (string) $column;
+        $id     = (int)    $id;
         $q = $this->db->prepare(
             "SELECT * FROM :table WHERE :column = :id ;"
         );
@@ -26,18 +28,20 @@ abstract class BaseManager {
     }
 
     protected function getInstancesFrom (
-        string $table,
-        string $column,
-        int    $id,
-        int    $page,
-        int    $number,
-        string $order       = NULL,
-               $isAscending = FALSE,
-               $checkId     = TRUE
+        $table,  // string : the name of the table we want to get the instance from
+        $column, // string : the name of the column of parent id
+        $id,     // int    : the parent id we want
+        $page,   // int    : the page number of the instances
+        $number, // int    : the number of instances per page
+        $order       = NULL,  // string : the column we want to order by
+        $isAscending = FALSE, // bool   : should we order by ASC ?
+        $checkId     = TRUE   // bool   : should we check the parent id
     ){
-        $id     = (int) $id;
-        $page   = (int) $page;
-        $number = (int) $number;
+        $table  = (string) $table;
+        $column = (string) $column;
+        $id     = (int)    $id;
+        $page   = (int)    $page;
+        $number = (int)    $number;
 
         // does we added params to set the order of the results ?
         $hasOrder = ( $order != NULL && $isAscending != NULL );
@@ -66,14 +70,16 @@ abstract class BaseManager {
     }
 
     protected function getNbPagesFrom (
-        string $table,
-        string $column,
-        int    $id,
-        int    $number,
-               $checkId = TRUE
+        $table,  // string : the name of the table we want to get the number of pages from
+        $column, // string : the name of the column of parent id
+        $id,     // int    : the parent id we want
+        $number, // int    : the number of instances per page
+        $checkId = TRUE // bool : should we check the parent id ?
     ){
-        $id     = (int) $id;
-        $number = (int) $number;
+        $table  = (string) $table;
+        $column = (string) $column;
+        $id     = (int)    $id;
+        $number = (int)    $number;
 
         $q = $this->db->prepare(
             "SELECT COUNT(*) AS `count` FROM :table"
@@ -91,10 +97,12 @@ abstract class BaseManager {
     }
 
     protected function createObject(
-        string $table,
-        string $id,
-        array  $data
+        $table,  // string : the table in which we want to create an object
+        $column, // string : the column of ids
+        array  $data // the data of the object
     ){
+        $table  = (string) $table;
+        $column = (string) $column;
         reset( $data );
         $first = key( $data );
         $params = "(";
@@ -122,19 +130,22 @@ abstract class BaseManager {
         $q->execute();
 
         // we recover the object we just created
-        $q = $this->db->prepare('SELECT * FROM :table WHERE :id = LAST_INSERT_ID()');
-        $q->bindParam(':table', $table, PDO::PARAM_STR);
-        $q->bindParam(':id'   , $id   , PDO::PARAM_INT);
+        $q = $this->db->prepare('SELECT * FROM :table WHERE :column = LAST_INSERT_ID()');
+        $q->bindParam(':table' , $table , PDO::PARAM_STR);
+        $q->bindParam(':column', $column, PDO::PARAM_INT);
         $q->execute();
         return $q;
     }
 
     protected function updateObject(
-        string $table,
-        string $column,
-        int    $id,
+        $table,  // string : the table in which we want to update the object
+        $column, // string : the column of ids
+        $id,     // int    : the id of the object
         array  $data
     ){
+        $table  = (string) $table;
+        $column = (string) $column;
+        $id     = (int)    $id;
         reset( $data );
         $first = key( $data );
         $values = "";

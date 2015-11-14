@@ -22,13 +22,21 @@ class PostManager extends BaseManager{
         }
     }
 
-    public function getPostsFromUser   ( int $id, int $page ){
+    public function getPostsFromUser   ( $id, $page ){
+        $id   = (int) $id;
+        $page = (int) $page;
         return $this->getPostsFrom('u_id',$id,$page,$this->nbEnt_u);
     }
-    public function getPostsFromThread ( int $id, int $page ){
+    public function getPostsFromThread ( $id, $page ){
+        $id   = (int) $id;
+        $page = (int) $page;
         return $this->getPostsFrom('t_id',$id,$page,$this->nbEnt_t);
     }
-    protected function getPostsFrom( string $column, int $id, int $page, int $number ){
+    protected function getPostsFrom( $column, $id, $page, $number ){
+        $column = (string) $column;
+        $id     = (int)    $id;
+        $page   = (int)    $page;
+        $number = (int)    $number;
         $q = $this->getInstancesFrom('Post',$column,$id,$page,$number,'p_date',TRUE);
         $posts = [];
         while( $data = $q->fetch(PDO::FETCH_ASSOC) ){
@@ -37,14 +45,19 @@ class PostManager extends BaseManager{
         return $posts;
     }
 
-    public function getNbPagesFromUser( int $id ){
+    public function getNbPagesFromUser( $id ){
+        $id = (int) $id;
         return $this->getNbPagesFrom('Post','u_id',$id,$this->nbEnt_u);
     }
-    public function getNbPagesFromThread( int $id ){
+    public function getNbPagesFromThread( $id ){
+        $id = (int) $id;
         return $this->getNbPagesFrom('Post','t_id',$id,$this->nbEnt_t);
     }
 
-    public function create( int $u_id, int $t_id, string $text ){
+    public function create( $u_id, $t_id, $text ){
+        $u_id = (int)    $u_id;
+        $t_id = (int)    $t_id;
+        $text = (string) $text;
         $q = $this->createObject('Post','p_id',[
             'u_id'   => $u_id,
             't_id'   => $t_id,

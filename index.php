@@ -1,6 +1,6 @@
 <?php
-    $ROOT_DIR = "";            // we set the ROOT directory relatively to this file
-    $ROOT_URL = "/miniForum/"; // we set the ROOT URL of this project
+    $ROOT_DIR = ""; // we set the ROOT directory relatively to this file
+    $ROOT_URL = ""; // we set the ROOT URL of this project
     require_once('controller/Controller.php');
 ?>
 <!DOCTYPE html>
@@ -28,6 +28,10 @@
             if( isset($_GET['PAGE']) ){
                 $PAGE = (int) $_GET['PAGE'];
             }
+            $ID = 1;
+            if( isset($_GET['ID']) ){
+                $ID = (int) $_GET['ID'];
+            }
 
             switch( $VIEW ){
                 case "home"    : include_once('view/common/home.php'    ); break;
@@ -35,6 +39,7 @@
                 case "login"   : include_once('view/identify/login.php' ); break;
                 case "section" : include_once('view/forum/section.php'  ); break;
                 case "thread"  : include_once('view/forum/thread.php'   ); break;
+                case "chat"    : include_once('view/forum/chat.php'     ); break;
                 default        : include_once('view/common/home.php'    ); break;
             }
         ?>

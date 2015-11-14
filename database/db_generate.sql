@@ -53,21 +53,36 @@ CREATE TABLE IF NOT EXISTS `Section` (
     `s_name` VARCHAR(40) NOT NULL        COMMENT "the name of the section",
     PRIMARY KEY (`s_id`  ), -- each section has an unique id to identify it
     UNIQUE      (`s_name`), -- each section has an unique name
-    FOREIGN KEY (`u_id`  ) REFERENCES `User`(`u_id`) -- each section has been made by one user
+    FOREIGN KEY (`u_id`  ) REFERENCES `User`   (`u_id`), -- each section has been made by one user
+    FOREIGN KEY (`s_supe`) REFERENCES `Section`(`s_id`)  -- each section is the child of an other section, except for ROOT
 )ENGINE=InnoDB CHARSET=utf8 COMMENT="contains the sections of the forum";
 
 -- we create a base user ROOT to manage the forum
 INSERT IGNORE INTO `User`(
+    `u_id`,
     `u_name`,
     `u_mail`,
     `u_pass`,
     `u_perm`
 ) VALUES (
+    1,
     "ROOT",
     "root@root",
     "dc76e9f0c0006e8f919e0c515c66dbba3982f785", -- ROOT's password : "root"
     -1 -- ALL permissions
 );
 -- we don't need to define the id or the date because they are auto generated
+INSERT IGNORE INTO `Section`(
+    `s_id`,
+    `u_id`,
+    `s_supe`,
+    `s_name`
+) VALUES (
+    1,
+    1,
+    1,
+    "ROOT" -- name of the ROOT section
+);
+
 
 SET FOREIGN_KEY_CHECKS = 1;

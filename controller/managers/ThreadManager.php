@@ -15,20 +15,29 @@ class ThreadManager extends BaseManager{
         $this->nbEnt_s = (int) $nbEnt_s;
     }
 
-    public function getThread ( int $id ){
+    public function getThread ( $id ){
+        $id = (int) $id;
         $q = $this->getInstance( 'Thread', 't_id', $id );
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){ // there is only one thread for this id at most
             return new Thread( $data );
         }
     }
 
-    public function getThreadsFromUser    ( int $id, int $page ){
+    public function getThreadsFromUser    ( $id, $page ){
+        $id   = (int) $id;
+        $page = (int) $page;
         return $this->getThreadFrom('u_id',$id,$page,$this->nbEnt_u);
     }
-    public function getThreadsFromSection ( int $id, int $page ){
-        return $this->getThreadFrom('s_id',$id,$page,$this->nbEnt_s);
+    public function getThreadsFromSection ( $id, $page ){
+        $id   = (int) $id;
+        $page = (int) $page;
+        return $this->getThreadsFrom('s_id',$id,$page,$this->nbEnt_s);
     }
-    protected function getThreadsFrom ( string $column, int $id, int $page, int $number ){
+    protected function getThreadsFrom ( $column, $id, $page, $number ){
+        $column = (string) $column;
+        $id     = (int)    $id;
+        $page   = (int)    $page;
+        $number = (int)    $number;
         $q = $this->getInstancesFrom('Thread',$column,$id,$page,$number,'t_date',TRUE);
         $threads = [];
         while( $data = $q->fetch(PDO::FETCH_ASSOC) ){
@@ -37,14 +46,21 @@ class ThreadManager extends BaseManager{
         return $threads;
     }
 
-    public function getNbPagesFromUser( int $id ){
+    public function getNbPagesFromUser( $id ){
+        $id   = (int) $id;
+        $page = (int) $page;
         return $this->getNbPagesFrom('Thread','u_id',$id,$this->nbEnt_u);
     }
-    public function getNbPagesFromSection( int $id ){
+    public function getNbPagesFromSection( $id ){
+        $id   = (int) $id;
+        $page = (int) $page;
         return $this->getNbPagesFrom('Thread','s_id',$id,$this->nbEnt_s);
     }
 
-    public function create( int $u_id, int $t_id, string $name ){
+    public function create( $u_id, $t_id, $name ){
+        $u_id = (int)    $u_id;
+        $t_id = (int)    $t_id;
+        $name = (string) $name;
         $q = $this->createObject('Thread','t_id',[
             'u_id'   => $u_id,
             't_id'   => $t_id,
