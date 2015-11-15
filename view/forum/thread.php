@@ -1,6 +1,6 @@
 <?php
-    $thread = $CONTROLLER->getThreadManager()->getThread( $id );
-    $posts[] = $CONTROLLER->getPostManager()->getPostFromThread( $id, $PAGE );
+    $thread = $CONTROLLER->getThreadManager()->getThread( $ID );
+    $posts[] = $CONTROLLER->getPostManager()->getPostFromThread( $ID, $PAGE );
 ?>
 <div class="page">
     <div class="container">
@@ -20,7 +20,7 @@
         </div>
 <?php
     }
-    $nbPages = $CONTROLLER->getPostManager()->getNbPagesFromThread( $id );
+    $nbPages = $CONTROLLER->getPostManager()->getNbPagesFromThread( $ID );
     include('view/common/pagination.php');
 ?>
     </div>
