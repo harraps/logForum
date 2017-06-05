@@ -19,11 +19,16 @@ class User extends BaseObject{
         $this->setPerm( $data['u_perm'] );
     }
 
-    protected function setName( string   $name ){ $this->name = (string) $name; }
-    protected function setMail( string   $mail ){ $this->mail = (string) $mail; }
-    protected function setPass( string   $pass ){ $this->pass = (string) $pass; }
-    protected function setDate( DateTime $date ){ $this->date =          $date; }
-    protected function setPerm( int      $perm ){ $this->perm = (int)    $perm; }
+    protected function setName( $name ){ $this->name = (string) $name; }
+    protected function setMail( $mail ){ $this->mail = (string) $mail; }
+    protected function setPass( $pass ){ $this->pass = (string) $pass; }
+    protected function setPerm( $perm ){ $this->perm = (int)    $perm; }
+    protected function setDate( $date ){
+        if(is_string($date)){
+            $this->date = DateTime::createFromFormat("Y-m-d H:i:s",$date);
+        }
+        $this->date = $date;
+    }
 
     public function getName(){ return $this->name; }
     public function getMail(){ return $this->mail; }

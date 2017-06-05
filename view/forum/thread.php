@@ -1,6 +1,6 @@
 <?php
     $thread = $CONTROLLER->getThreadManager()->getThread( $ID );
-    $posts[] = $CONTROLLER->getPostManager()->getPostFromThread( $ID, $PAGE );
+    $posts = $CONTROLLER->getPostManager()->getPostsFromThread( $ID, $PAGE );
 ?>
 <div class="page">
     <div class="container">

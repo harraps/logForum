@@ -17,10 +17,15 @@ class Post extends BaseObject{
         $this->setText    ( $data['p_text'] );
     }
 
-    protected function setUserId  ( int      $id   ){ $this->$u_id = (int)    $id;   }
-    protected function setThreadId( int      $id   ){ $this->$t_id = (int)    $id;   }
-    protected function setDate    ( DateTime $date ){ $this->$date =          $date; }
-    protected function setText    ( string   $text ){ $this->$text = (string) $text; }
+    protected function setUserId  ( $id   ){ $this->u_id = (int)    $id;   }
+    protected function setThreadId( $id   ){ $this->t_id = (int)    $id;   }
+    protected function setText    ( $text ){ $this->text = (string) $text; }
+    protected function setDate( $date ){
+        if(is_string($date)){
+            $this->date = DateTime::createFromFormat("Y-m-d H:i:s",$date);
+        }
+        $this->date = $date;
+    }
 
     public function getUserId  (){ return $this->u_id; }
     public function getThreadId(){ return $this->t_id; }

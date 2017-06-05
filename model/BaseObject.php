@@ -8,8 +8,8 @@ abstract class BaseObject {
 
     public abstract function __construct( array $data );
 
-    protected function setId( int $id ){ $this->id = (int) $id; }
-    public    function getId()         { return $this->id;      }
+    protected function setId( $id ){ $this->id = (int) $id; }
+    public function getId(){ return $this->id; }
 
     public abstract function update();
 }

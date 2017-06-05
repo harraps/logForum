@@ -40,22 +40,29 @@ CREATE TABLE IF NOT EXISTS `Thread` (
     `t_date` TIMESTAMP   DEFAULT CURRENT_TIMESTAMP COMMENT "the date of last post made in this thread",
     `t_stat` INT         DEFAULT 0                 COMMENT "the state of the thread", -- follow a mask to specify its state (ex: pinned, closed, ...)
     PRIMARY KEY (`t_id`  ), -- each thread has an unique id to identify it
-    UNIQUE      (`t_name`), -- each thread has a unique name
-    FOREIGN KEY (`u_id`  ) REFERENCES `User`    (`u_id`), -- each thread has been created by one user
+    -- UNIQUE      (`t_name`), -- each thread has a unique name
+    FOREIGN KEY (`u_id`  ) REFERENCES `User`   (`u_id`), -- each thread has been created by one user
     FOREIGN KEY (`s_id`  ) REFERENCES `Section`(`s_id`)  -- each thread is inside one section
 )ENGINE=InnoDB CHARSET=utf8 COMMENT="contains the threads made on the forum";
 
 -- Table for sections
 CREATE TABLE IF NOT EXISTS `Section` (
-    `s_id`   INT         AUTO_INCREMENT  COMMENT "the id of the section",
-    `u_id`   INT         NOT NULL        COMMENT "the id of the user who created this section",
-    `s_supe` INT                         COMMENT "the id of the parent section", -- if null the parent is root
-    `s_name` VARCHAR(40) NOT NULL        COMMENT "the name of the section",
+    `s_id`   INT           AUTO_INCREMENT COMMENT "the id of the section",
+    `s_name` VARCHAR(40)   NOT NULL       COMMENT "the name of the section",
+    `s_desc` VARCHAR(2048) DEFAULT ""     COMMENT "the description of the section",
     PRIMARY KEY (`s_id`  ), -- each section has an unique id to identify it
-    UNIQUE      (`s_name`), -- each section has an unique name
-    FOREIGN KEY (`u_id`  ) REFERENCES `User`   (`u_id`), -- each section has been made by one user
-    FOREIGN KEY (`s_supe`) REFERENCES `Section`(`s_id`)  -- each section is the child of an other section, except for ROOT
+    UNIQUE      (`s_name`)  -- each section has an unique name
 )ENGINE=InnoDB CHARSET=utf8 COMMENT="contains the sections of the forum";
+
+-- Table for chat
+CREATE TABLE IF NOT EXISTS `Chat` (
+	`c_id`   INT          AUTO_INCREMENT            COMMENT "the id of the chat post",
+    `u_id`   INT          NOT NULL                  COMMENT "the id of the user who posted the message",
+    `c_date` TIMESTAMP    DEFAULT CURRENT_TIMESTAMP COMMENT "the date when the message was posted",
+    `c_text` VARCHAR(256) NOT NULL                  COMMENT "the content of the post",
+    PRIMARY KEY (`c_id`),                          -- each chat post has an id
+    FOREIGN KEY (`u_id`) REFERENCES `User`(`u_id`) -- each chat post has been created by one user
+)ENGINE=InnoDB CHARSET=utf8 COMMENT="contains chat posts";
 
 -- we create a base user ROOT to manage the forum
 INSERT IGNORE INTO `User`(
@@ -70,18 +77,6 @@ INSERT IGNORE INTO `User`(
     "root@root",
     "dc76e9f0c0006e8f919e0c515c66dbba3982f785", -- ROOT's password : "root"
     -1 -- ALL permissions
-);
--- we don't need to define the id or the date because they are auto generated
-INSERT IGNORE INTO `Section`(
-    `s_id`,
-    `u_id`,
-    `s_supe`,
-    `s_name`
-) VALUES (
-    1,
-    1,
-    1,
-    "ROOT" -- name of the ROOT section
 );
 
 

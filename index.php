@@ -37,6 +37,7 @@
                 case "home"    : include_once('view/common/home.php'    ); break;
                 case "signin"  : include_once('view/identify/signin.php'); break;
                 case "login"   : include_once('view/identify/login.php' ); break;
+                case "forum"   : include_once('view/forum/forum.php'    ); break;
                 case "section" : include_once('view/forum/section.php'  ); break;
                 case "thread"  : include_once('view/forum/thread.php'   ); break;
                 case "chat"    : include_once('view/forum/chat.php'     ); break;

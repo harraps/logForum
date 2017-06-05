@@ -25,10 +25,10 @@ class Controller {
             $ini_db['pass']
         );
 
-        $this->u_man = new UserManager   ($this->db, 100    );
-        $this->p_man = new PostManager   ($this->db, 20, 100);
-        $this->t_man = new ThreadManager ($this->db, 20, 100);
-        $this->s_man = new SectionManager($this->db, 20, 100);
+        $this->u_man = new UserManager   ($this->db, 50);
+        $this->p_man = new PostManager   ($this->db, 20);
+        $this->t_man = new ThreadManager ($this->db, 30);
+        $this->s_man = new SectionManager($this->db, 20);
     }
 
     public function getDB(){ return $this->db; }

@@ -3,41 +3,72 @@ require_once('controller/managers/BaseManager.php');
 require_once('model/Post.php');
 
 class PostManager extends BaseManager{
-
-    private $nbEnt_u; // number of posts per page for users
-    private $nbEnt_t; // number of posts per page for threads
-
-    public function __construct( PDO $db, $nbEnt_u, $nbEnt_t ){
-        $nbEnt_u = (int) $nbEnt_u;
-        $nbEnt_t = (int) $nbEnt_t;
-        parent::__construct($db);
-        $this->nbEnt_u = (int) $nbEnt_u;
-        $this->nbEnt_t = (int) $nbEnt_t;
+    
+    // statements to create and destroy entries
+    private $stmt_inst;
+    private $stmt_inst_select;
+    private $stmt_nbpg_select;
+    
+    private $stmt_last;
+    private $stmt_create;
+    private $stmt_update;
+    
+    private $stmt_up_thread;
+    
+    public function __construct( PDO $db, $nbEnt ){
+        parent::__construct($db,$nbEnt);
+        
+        // statements initialization
+        $this->stmt_inst = $this->db->prepare(
+            "SELECT * FROM `Post` WHERE `p_id` = :id ;"
+        );
+        $this->stmt_inst_select = $this->db->prepare(
+            "SELECT * FROM `Post` WHERE `t_id` = :id ORDER BY `p_date` ASC LIMIT :start , :number ;"
+        );
+        $this->stmt_nbpg_select = $this->db->prepare(
+            "SELECT COUNT(*) AS `count` FROM `Post` WHERE `t_id` = :id ;"
+        );
+        
+        $this->stmt_last = $this->db->prepare(
+            "SELECT * FROM `Post` WHERE `p_id` = LAST_INSERT_ID();"
+        );
+        $this->stmt_create = $this->db->prepare(
+            "INSERT INTO `Post` (`u_id`,`t_id`,`p_text`) VALUES ( :userId , :threadId , :text );"
+        );
+        $this->stmt_update = $this->db->prepare(
+            "UPDATE `Post` SET `p_text` = :text WHERE `p_id` = :id ;"
+        );
+        
+        $this->stmt_up_thread = $this->db->prepare(
+            "UPDATE `Thread` SET `t_date` = CURRENT_TIMESTAMP WHERE `t_id` = :id ;"
+        );
     }
 
-    public function getPost( int $id ){
-        $q = $this->getInstance( 'Post', 'p_id', $id );
+    public function getPost( $id ){
+        $id = (int) $id;
+        
+        $q = $this->stmt_inst;
+        $q->bindParam(':id', $id, PDO::PARAM_INT);
+        $q->execute();
+        
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){ // there is only one post for this id at most
             return new Post( $data );
         }
+        return NULL;
     }
-
-    public function getPostsFromUser   ( $id, $page ){
+    
+    public function getPostsFromThread( $id, $page ){
         $id   = (int) $id;
         $page = (int) $page;
-        return $this->getPostsFrom('u_id',$id,$page,$this->nbEnt_u);
-    }
-    public function getPostsFromThread ( $id, $page ){
-        $id   = (int) $id;
-        $page = (int) $page;
-        return $this->getPostsFrom('t_id',$id,$page,$this->nbEnt_t);
-    }
-    protected function getPostsFrom( $column, $id, $page, $number ){
-        $column = (string) $column;
-        $id     = (int)    $id;
-        $page   = (int)    $page;
-        $number = (int)    $number;
-        $q = $this->getInstancesFrom('Post',$column,$id,$page,$number,'p_date',TRUE);
+        $number = $this->nbEnt;
+        $start  = $page * $number;
+        
+        $q = $this->stmt_inst_select;
+        $q->bindParam(':id'    , $id    , PDO::PARAM_INT);
+        $q->bindParam(':start' , $start , PDO::PARAM_INT);
+        $q->bindParam(':number', $number, PDO::PARAM_INT);
+        $q->execute();
+        
         $posts = [];
         while( $data = $q->fetch(PDO::FETCH_ASSOC) ){
             $posts[] = new Post( $data );
@@ -45,38 +76,48 @@ class PostManager extends BaseManager{
         return $posts;
     }
 
-    public function getNbPagesFromUser( $id ){
-        $id = (int) $id;
-        return $this->getNbPagesFrom('Post','u_id',$id,$this->nbEnt_u);
-    }
     public function getNbPagesFromThread( $id ){
         $id = (int) $id;
-        return $this->getNbPagesFrom('Post','t_id',$id,$this->nbEnt_t);
+        
+        $q = $this->stmt_nbpg_select;
+        $q->bindParam(':id', $id, PDO::PARAM_INT);
+        $q->execute();
+        
+        if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
+            return ceil( $data['count'] / $this->nbEnt );
+        }
+        return 0;
     }
 
     public function create( $u_id, $t_id, $text ){
         $u_id = (int)    $u_id;
         $t_id = (int)    $t_id;
         $text = (string) $text;
-        $q = $this->createObject('Post','p_id',[
-            'u_id'   => $u_id,
-            't_id'   => $t_id,
-            'p_text' => $text
-        ]);
-        if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
-            // we update the date of the thread
-            $q2 = $this->db->prepare(
-                'UPDATE `Thread` SET `t_date` = CURRENT_TIMESTAMP WHERE `t_id` = :t_id ;'
-            );
-            $q2->bindParam(':t_id', $t_id, PDO::PARAM_INT);
-            $q2->execute();
-            return new Post( $data );
+        
+        $q = $this->stmt_create;
+        $q->bindParam(':userId'  , $u_id, PDO::PARAM_INT);
+        $q->bindParam(':threadId', $t_id, PDO::PARAM_INT);
+        $q->bindParam(':text'    , $text, PDO::PARAM_STR);
+        
+        if( $q->execute() ){ // if insertion successful
+            // update the date of the thread
+            $q = $this->stmt_up_thread;
+            $q->bindParam(':id', $t_id, PDO::PARAM_INT);
+            $q->execute();
+            
+            $q = $this->stmt_last;
+            $q->execute();
+            if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
+                return new Post( $data );
+            }
         }
+        return NULL;
     }
 
     public function update( Post $post ){
-        $this->updateObject('Post','p_id',$post->getId(),[
-            'p_text' => $post->getText()
-        ]);
+        $q = $this->stmt_update;
+        $q->bindParam(':id'  , $thread->getId  (), PDO::PARAM_INT);
+        $q->bindParam(':text', $thread->getText(), PDO::PARAM_STR);
+        $q->execute();
     }
 }

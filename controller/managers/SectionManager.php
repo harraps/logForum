@@ -3,42 +3,64 @@ require_once('controller/managers/BaseManager.php');
 require_once('model/Section.php');
 
 class SectionManager extends BaseManager{
-
-    private $nbEnt_u; // int : number of sections per page for users
-    private $nbEnt_s; // int : number of sections per page for parent sections
-
-    public function __construct( PDO $db, $nbEnt_u, $nbEnt_s ){
-        $nbEnt_u = (int) $nbEnt_u;
-        $nbEnt_s = (int) $nbEnt_s;
-        parent::__construct($db);
-        $this->nbEnt_u = (int) $nbEnt_u;
-        $this->nbEnt_s = (int) $nbEnt_s;
+    
+    // statements to create and destroy entries
+    private $stmt_inst;
+    private $stmt_inst_all;
+    private $stmt_nbpg_all;
+    
+    private $stmt_last;
+    private $stmt_create;
+    private $stmt_update;
+    
+    public function __construct( PDO $db, $nbEnt ){
+        parent::__construct($db,$nbEnt);
+        
+        // statements initialization
+        $this->stmt_inst = $this->db->prepare(
+            "SELECT * FROM `Section` WHERE `s_id` = :id ;"
+        );
+        $this->stmt_inst_all = $db->prepare(
+            "SELECT * FROM `Section` ORDER BY `s_name` ASC LIMIT :start , :number ;"
+        );
+        $this->stmt_nbpg_all= $db->prepare(
+            "SELECT COUNT(*) AS `count` FROM `Section` ;"
+        );
+        
+        $this->stmt_last = $db->prepare(
+            "SELECT * FROM `Section` WHERE `s_id` = LAST_INSERT_ID();"
+        );
+        $this->stmt_create = $this->db->prepare(
+            "INSERT INTO `Section` (`s_name`,`s_desc`) VALUES ( :name , :desc );"
+        );
+        $this->stmt_update = $this->db->prepare(
+            "UPDATE `Section` SET `s_name` = :name , `s_desc` = :desc WHERE `s_id` = :id ;"
+        );
     }
 
     public function getSection( $id ){
         $id = (int) $id;
-        $q = $this->getInstance( 'Section', 's_id', $id );
+        
+        $q = $this->stmt_inst;
+        $q->bindParam(':id', $id, PDO::PARAM_INT);
+        $q->execute();
+        
         if( $data = $q->fetch(PDO::FETCH_ASSOC) ){ // there is only one section for this id at most
             return new Section( $data );
         }
+        return NULL;
     }
-
-    public function getSectionsFromUser  ( $id, $page ){
-        $id   = (int) $id;
+    
+    public function getSections( $page ){
         $page = (int) $page;
-        return $this->getSectionFrom('u_id',$id,$page,$this->nbEnt_u);
-    }
-    public function getSectionsFromParent( $id, $page ){
-        $id   = (int) $id;
-        $page = (int) $page;
-        return $this->getSectionsFrom('s_supe',$id,$page,$this->nbEnt_s);
-    }
-    protected function getSectionsFrom( $column, $id, $page, $number ){
-        $column = (string) $column;
-        $id     = (int)    $id;
-        $page   = (int)    $page;
-        $number = (int)    $number;
-        $q = $this->getInstancesFrom('Section',$column,$id,$page,$number,'s_name',TRUE);
+        $number = $this->nbEnt;
+        $start  = $page * $number;
+        
+        $q = $this->stmt_inst_all;
+        $q->bindParam(':start' , $start , PDO::PARAM_INT);
+        $q->bindParam(':number', $number, PDO::PARAM_INT);
+        $q->execute();
+        
         $sections = [];
         while( $data = $q->fetch(PDO::FETCH_ASSOC) ){
             $sections[] = new Section( $data );
@@ -46,35 +68,42 @@ class SectionManager extends BaseManager{
         return $sections;
     }
 
-    public function getNbPagesFromUser( $id ){
+    public function getNbPages( $id ){
         $id = (int) $id;
-        return $this->getNbPagesFrom('Section','u_id',$id,$this->nbEnt_u);
-    }
-    public function getNbPagesFromParent( $id ){
-        $id = (int) $id;
-        return $this->getNbPagesFrom('Section','s_supe',$id,$this->nbEnt_s);
+        
+        $q = $this->stmt_nbpg_all;
+        $q->execute();
+        
+        if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
+            return ceil( $data['count'] / $this->nbEnt );
+        }
+        return 0;
     }
 
-    public function create( $u_id, $supe, $name ){
-        $u_id = (int)    $u_id;
-        $supe = (int)    $supe;
+    public function create( $name, $desc ){
         $name = (string) $name;
-        $q = $this->createObject('Section','s_id',[
-            'u_id'   => $u_id,
-            's_supe' => $supe,
-            's_name' => $name
-        ]);
-        if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
-            return new Section( $data );
+        $desc = (string) $desc;
+        
+        $q = $this->stmt_create;
+        $q->bindParam(':name', $name, PDO::PARAM_STR);
+        $q->bindParam(':desc', $desc, PDO::PARAM_STR);
+        
+        if( $q->execute() ){ // if insertion successful
+            $q = $this->stmt_last;
+            $q->execute();
+            if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
+                return new Section( $data );
+            }
         }
+        return NULL;
     }
 
     public function update( Section $section ){
-        $this->updateObject('Section','s_id',$section->getId(),[
-            'u_id'   => $section->getUserId(),
-            's_supe' => $section->getParentId(),
-            's_name' => $section->getName()
-        ]);
+        $q = $this->stmt_update;
+        $q->bindParam(':id'  , $section->getId         (), PDO::PARAM_INT);
+        $q->bindParam(':name', $section->getName       (), PDO::PARAM_STR);
+        $q->bindParam(':desc', $section->getDescription(), PDO::PARAM_STR);
+        $q->execute();
     }
 
 }

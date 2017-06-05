@@ -19,12 +19,17 @@ class Thread extends BaseObject{
         $this->setState    ( $data['t_stat'] );
     }
 
-    protected function setUserId   ( int      $id    ){ $this->u_id = (int)    $id;   }
-    protected function setSectionId( int      $id    ){ $this->s_id = (int)    $id;   }
-    protected function setName     ( string   $name  ){ $this->name = (string) $name; }
-    protected function setDate     ( DateTime $date  ){ $this->date =          $date; }
-    protected function setState    ( int      $state ){ $this->stat = (int)    $stat; }
-
+    protected function setUserId   ( $id    ){ $this->u_id = (int)    $id;    }
+    protected function setSectionId( $id    ){ $this->s_id = (int)    $id;    }
+    protected function setName     ( $name  ){ $this->name = (string) $name;  }
+    protected function setState    ( $state ){ $this->stat = (int)    $state; }
+    protected function setDate( $date ){
+        if(is_string($date)){
+            $this->date = DateTime::createFromFormat("Y-m-d H:i:s",$date);
+        }
+        $this->date = $date;
+    }
+    
     public function getUserId   (){ return $this->u_id; }
     public function getSectionId(){ return $this->s_id; }
     public function getName     (){ return $this->name; }
