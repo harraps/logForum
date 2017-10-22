@@ -17,7 +17,7 @@
                     <a href="<?= $ROOT_URL.'?VIEW=thread&ID='.$thread->getId() ?>" class="clearfix section">
                         <div class="name"><?= $thread->getName() ?></div>
                         <div class="info">Last Post</div>
-                        <div class="info"><?= $thread->getDate() ?></div>
+                        <div class="info"><?= $thread->getDate()->format('Y-m-d H:i') ?></div>
                     </a>
                 </li>
 <?php

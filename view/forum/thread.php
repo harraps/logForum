@@ -14,7 +14,7 @@
         <div class="panel post">
             <div class="user">
                 <div class="name"><?= $post->getUser()->getName() ?></div>
-                <div class="date"><?= $post->getDate() ?></div>
+                <div class="date"><?= $post->getDate()->format('Y-m-d H:i') ?></div>
             </div>
             <div class="text"><?= $post->getText() ?></div>
         </div>

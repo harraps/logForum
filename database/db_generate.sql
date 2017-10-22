@@ -1,7 +1,7 @@
 -- SQL SCRIPT TO GENERATE THE DATABASE --
 
-CREATE DATABASE IF NOT EXISTS `miniForum`;
-USE `miniForum`;
+CREATE DATABASE IF NOT EXISTS `logForum`;
+USE `logForum`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 
@@ -10,7 +10,8 @@ CREATE TABLE IF NOT EXISTS `User` (
     `u_id`   INT         AUTO_INCREMENT            COMMENT "the id of the user",
     `u_name` VARCHAR(20) NOT NULL                  COMMENT "the name of the user",
     `u_mail` VARCHAR(40) NOT NULL                  COMMENT "the mail of the user",
-    `u_pass` CHAR(40)    NOT NULL                  COMMENT "the password of the user", -- crypted password are 40 characters long
+    `u_pass` CHAR(40)    NOT NULL                  COMMENT "the encrypted password of the user", -- encrypted password are 40 characters long
+    `u_salt` CHAR(20)    NOT NULL                  COMMENT "the random salt used to encrypt the password", -- we need a salt to get better security
     `u_date` TIMESTAMP   DEFAULT CURRENT_TIMESTAMP COMMENT "the sign in date of the user",
     `u_perm` INT         DEFAULT 0                 COMMENT "the permissions of the user", -- follow a mask to specify the rights of the user
     PRIMARY KEY (`u_id`  ), -- each user has an unique id to identify him
@@ -40,7 +41,6 @@ CREATE TABLE IF NOT EXISTS `Thread` (
     `t_date` TIMESTAMP   DEFAULT CURRENT_TIMESTAMP COMMENT "the date of last post made in this thread",
     `t_stat` INT         DEFAULT 0                 COMMENT "the state of the thread", -- follow a mask to specify its state (ex: pinned, closed, ...)
     PRIMARY KEY (`t_id`  ), -- each thread has an unique id to identify it
-    -- UNIQUE      (`t_name`), -- each thread has a unique name
     FOREIGN KEY (`u_id`  ) REFERENCES `User`   (`u_id`), -- each thread has been created by one user
     FOREIGN KEY (`s_id`  ) REFERENCES `Section`(`s_id`)  -- each thread is inside one section
 )ENGINE=InnoDB CHARSET=utf8 COMMENT="contains the threads made on the forum";
@@ -70,12 +70,14 @@ INSERT IGNORE INTO `User`(
     `u_name`,
     `u_mail`,
     `u_pass`,
+    `u_salt`,
     `u_perm`
 ) VALUES (
     1,
     "ROOT",
     "root@root",
     "dc76e9f0c0006e8f919e0c515c66dbba3982f785", -- ROOT's password : "root"
+    "saltsaltsaltsaltsalt", -- The random salt
     -1 -- ALL permissions
 );
 

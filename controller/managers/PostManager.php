@@ -15,8 +15,8 @@ class PostManager extends BaseManager{
     
     private $stmt_up_thread;
     
-    public function __construct( PDO $db, $nbEnt ){
-        parent::__construct($db,$nbEnt);
+    public function __construct( PDO $db, int $nbEnt ){
+        parent::__construct($db, $nbEnt);
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
@@ -44,9 +44,7 @@ class PostManager extends BaseManager{
         );
     }
 
-    public function getPost( $id ){
-        $id = (int) $id;
-        
+    public function getPost( int $id ){        
         $q = $this->stmt_inst;
         $q->bindParam(':id', $id, PDO::PARAM_INT);
         $q->execute();
@@ -57,9 +55,7 @@ class PostManager extends BaseManager{
         return NULL;
     }
     
-    public function getPostsFromThread( $id, $page ){
-        $id   = (int) $id;
-        $page = (int) $page;
+    public function getPostsFromThread( int $id, int $page ){
         $number = $this->nbEnt;
         $start  = $page * $number;
         
@@ -76,9 +72,7 @@ class PostManager extends BaseManager{
         return $posts;
     }
 
-    public function getNbPagesFromThread( $id ){
-        $id = (int) $id;
-        
+    public function getNbPagesFromThread( int $id ){
         $q = $this->stmt_nbpg_select;
         $q->bindParam(':id', $id, PDO::PARAM_INT);
         $q->execute();
@@ -89,11 +83,7 @@ class PostManager extends BaseManager{
         return 0;
     }
 
-    public function create( $u_id, $t_id, $text ){
-        $u_id = (int)    $u_id;
-        $t_id = (int)    $t_id;
-        $text = (string) $text;
-        
+    public function create( int $u_id, int $t_id, string $text ){
         $q = $this->stmt_create;
         $q->bindParam(':userId'  , $u_id, PDO::PARAM_INT);
         $q->bindParam(':threadId', $t_id, PDO::PARAM_INT);

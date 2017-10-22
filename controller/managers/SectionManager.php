@@ -13,8 +13,8 @@ class SectionManager extends BaseManager{
     private $stmt_create;
     private $stmt_update;
     
-    public function __construct( PDO $db, $nbEnt ){
-        parent::__construct($db,$nbEnt);
+    public function __construct( PDO $db, int $nbEnt ){
+        parent::__construct($db, $nbEnt);
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
@@ -38,9 +38,7 @@ class SectionManager extends BaseManager{
         );
     }
 
-    public function getSection( $id ){
-        $id = (int) $id;
-        
+    public function getSection( int $id ){
         $q = $this->stmt_inst;
         $q->bindParam(':id', $id, PDO::PARAM_INT);
         $q->execute();
@@ -51,8 +49,7 @@ class SectionManager extends BaseManager{
         return NULL;
     }
     
-    public function getSections( $page ){
-        $page = (int) $page;
+    public function getSections( int $page ){
         $number = $this->nbEnt;
         $start  = $page * $number;
         
@@ -68,9 +65,7 @@ class SectionManager extends BaseManager{
         return $sections;
     }
 
-    public function getNbPages( $id ){
-        $id = (int) $id;
-        
+    public function getNbPages( int $id ){
         $q = $this->stmt_nbpg_all;
         $q->execute();
         
@@ -80,10 +75,7 @@ class SectionManager extends BaseManager{
         return 0;
     }
 
-    public function create( $name, $desc ){
-        $name = (string) $name;
-        $desc = (string) $desc;
-        
+    public function create( string $name, string $desc ){
         $q = $this->stmt_create;
         $q->bindParam(':name', $name, PDO::PARAM_STR);
         $q->bindParam(':desc', $desc, PDO::PARAM_STR);

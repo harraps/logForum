@@ -15,8 +15,8 @@ class UserManager extends BaseManager{
     
     private $stmt_up_permissions;
     
-    public function __construct( PDO $db, $nbEnt ){
-        parent::__construct($db,$nbEnt);
+    public function __construct( PDO $db, int $nbEnt ){
+        parent::__construct($db, $nbEnt);
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
@@ -44,9 +44,7 @@ class UserManager extends BaseManager{
         );
     }
 
-    public function getUser( $id ){
-        $id = (int) $id;
-        
+    public function getUser( int $id ){
         $q = $this->stmt_inst;
         $q->bindParam(':id', $id, PDO::PARAM_INT);
         $q->execute();
@@ -57,8 +55,7 @@ class UserManager extends BaseManager{
         return NULL;
     }
 
-    public function getUsers( $page ){
-        $page = (int) $page;
+    public function getUsers( int $page ){
         $number = $this->nbEnt;
         $start  = $page * $number;
         
@@ -85,11 +82,7 @@ class UserManager extends BaseManager{
         return 0;
     }
 
-    public function create( $name, $mail, $pass ){
-        $name = (string) $name;
-        $mail = (string) $mail;
-        $pass = (string) $pass;
-        
+    public function create( string $name, string $mail, string $pass ){
         $q = $this->stmt_create;
         $q->bindParam(':name', $name, PDO::PARAM_STR);
         $q->bindParam(':mail', $mail, PDO::PARAM_STR);

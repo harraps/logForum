@@ -13,8 +13,8 @@ class ThreadManager extends BaseManager{
     private $stmt_create;
     private $stmt_update;
     
-    public function __construct( PDO $db, $nbEnt ){
-        parent::__construct($db,$nbEnt);
+    public function __construct( PDO $db, int $nbEnt ){
+        parent::__construct($db, $nbEnt);
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
@@ -38,9 +38,7 @@ class ThreadManager extends BaseManager{
         );
     }
 
-    public function getThread( $id ){
-        $id = (int) $id;
-        
+    public function getThread( int $id ){
         $q = $this->stmt_inst;
         $q->bindParam('id', $id, PDO::PARAM_INT);
         $q->execute();
@@ -51,9 +49,7 @@ class ThreadManager extends BaseManager{
         return NULL;
     }
 
-    public function getThreadsFromSection( $id, $page ){
-        $id   = (int) $id;
-        $page = (int) $page;
+    public function getThreadsFromSection( int $id, int $page ){
         $number = $this->nbEnt;
         $start  = $page * $number;
         
@@ -70,9 +66,7 @@ class ThreadManager extends BaseManager{
         return $threads;
     }
 
-    public function getNbPagesFromSection( $id ){
-        $id = (int) $id;
-        
+    public function getNbPagesFromSection( int $id ){
         $q = $this->stmt_nbpg_selected;
         $q->bindParam(':id', $id, PDO::PARAM_INT);
         $q->execute();
@@ -83,10 +77,7 @@ class ThreadManager extends BaseManager{
         return 0;
     }
 
-    public function create( $u_id, $name ){
-        $u_id = (int)    $u_id;
-        $name = (string) $name;
-        
+    public function create( int $u_id, string $name ){
         $q = $this->stmt_create;
         $q->bindParam(':userId', $u_id, PDO::PARAM_INT);
         $q->bindParam(':name'  , $name, PDO::PARAM_STR);
