@@ -1,3 +1,6 @@
+# ignore library directory for now
+lib/
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
