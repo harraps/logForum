@@ -25,7 +25,7 @@
         </div>
 <?php
     $nbPages = $CONTROLLER->getSectionManager()->getNbPages( $ID );
-    include('view/common/pagination.php');
+    include('components/pagination.php');
 ?>
     </div>
 </div>

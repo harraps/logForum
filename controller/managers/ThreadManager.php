@@ -31,10 +31,10 @@ class ThreadManager extends BaseManager{
             "SELECT * FROM `Thread` WHERE `t_id` = LAST_INSERT_ID();"
         );
         $this->stmt_create = $this->db->prepare(
-            "INSERT INTO `Thread` (`u_id`,`t_name`) VALUES ( :userId , :name );"
+            "INSERT INTO `Thread` (`u_ip`,`t_name`) VALUES ( :userId , :name );"
         );
         $this->stmt_update = $this->db->prepare(
-            "UPDATE `Thread` SET `t_name` = :name , `t_stat` = :state WHERE `t_id` = :id ;"
+            "UPDATE `Thread` SET `t_name` = :name WHERE `t_id` = :id ;"
         );
     }
 
@@ -96,7 +96,6 @@ class ThreadManager extends BaseManager{
         $q = $this->stmt_update;
         $q->bindParam(':id'   , $thread->getId   (), PDO::PARAM_INT);
         $q->bindParam(':name' , $thread->getName (), PDO::PARAM_STR);
-        $q->bindParam(':state', $thread->getState(), PDO::PARAM_INT);
         $q->execute();
     }
 }

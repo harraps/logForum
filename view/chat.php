@@ -1,6 +1,6 @@
 <?php
-    $chats = $CONTROLLER->getChatManager()->getChatEntries();
-    //$chats = [];
+    //$chats = $CONTROLLER->getChatManager()->getChatEntries();
+    $chats = [];
 ?>
 <div class="page">
     <div class="container">

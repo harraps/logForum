@@ -7,16 +7,16 @@
 <html>
     <head>
         <title></title>
-        <meta name="author" content="Harraps" />
+        <meta name="author" content="Olivier Schyns" />
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link href="view/css/style.css" rel="stylesheet" />
-        <script src="view/js/script.js"></script>
+        <link  href="css/style.css" rel="stylesheet" />
+        <script src="js/script.js"></script>
     </head>
     <body>
         <?php
 
-            include_once('view/common/menu.php'); // we add the menu of the website
+            include_once('components/menu.php'); // we add the menu of the website
 
             // we recover the page the user wants to display
             $VIEW = "home";
@@ -34,14 +34,11 @@
             }
 
             switch( $VIEW ){
-                case "home"    : include_once('view/common/home.php'    ); break;
-                case "signin"  : include_once('view/identify/signin.php'); break;
-                case "login"   : include_once('view/identify/login.php' ); break;
-                case "forum"   : include_once('view/forum/forum.php'    ); break;
-                case "section" : include_once('view/forum/section.php'  ); break;
-                case "thread"  : include_once('view/forum/thread.php'   ); break;
-                case "chat"    : include_once('view/forum/chat.php'     ); break;
-                default        : include_once('view/common/home.php'    ); break;
+                case "home"    : include_once('view/home.php'   ); break;
+                case "forum"   : include_once('view/forum.php'  ); break;
+                case "section" : include_once('view/section.php'); break;
+                case "thread"  : include_once('view/thread.php' ); break;
+                default        : include_once('view/home.php'   ); break;
             }
         ?>
     </body>

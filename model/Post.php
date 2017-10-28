@@ -20,7 +20,7 @@ class Post extends BaseObject{
     // constructor to recover post from database
     public function __construct( array $data ){
         $this->setId      ( $data['p_id'  ] );
-        $this->setUserId  ( $data['u_id'  ] );
+        $this->setUserId  ( $data['u_ip'  ] );
         $this->setThreadId( $data['t_id'  ] );
         $this->setDate    ( $data['p_date'] );
         $this->setText    ( $data['p_text'] );
@@ -40,9 +40,10 @@ class Post extends BaseObject{
     // return the user who created this post
     public function getUser() : User {
         global $CONTROLLER;
+        $id = $this->u_id ?: -1;
         return $CONTROLLER
             ->getUserManager()
-            ->getUser($this->u_id);
+            ->getUser($id);
     }
     // return the thread in which this post has been made
     public function getThread() : Thread {

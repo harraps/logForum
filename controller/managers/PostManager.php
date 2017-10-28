@@ -33,7 +33,7 @@ class PostManager extends BaseManager{
             "SELECT * FROM `Post` WHERE `p_id` = LAST_INSERT_ID();"
         );
         $this->stmt_create = $this->db->prepare(
-            "INSERT INTO `Post` (`u_id`,`t_id`,`p_text`) VALUES ( :userId , :threadId , :text );"
+            "INSERT INTO `Post` (`u_ip`,`t_id`,`p_text`) VALUES ( :userId , :threadId , :text );"
         );
         $this->stmt_update = $this->db->prepare(
             "UPDATE `Post` SET `p_text` = :text WHERE `p_id` = :id ;"

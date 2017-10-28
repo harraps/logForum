@@ -21,7 +21,7 @@
 <?php
     }
     $nbPages = $CONTROLLER->getPostManager()->getNbPagesFromThread( $ID );
-    include('view/common/pagination.php');
+    include('components/pagination.php');
 ?>
     </div>
 </div>

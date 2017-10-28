@@ -20,7 +20,7 @@ class UserManager extends BaseManager{
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
-            "SELECT * FROM `User` WHERE `u_id` = :id ;"
+            "SELECT * FROM `User` WHERE `u_ip` = :id ;"
         );
         $this->stmt_inst_all = $this->db->prepare(
             "SELECT * FROM `User` ORDER BY `u_name` ASC LIMIT :start , :number ;"
@@ -30,17 +30,13 @@ class UserManager extends BaseManager{
         );
         
         $this->stmt_last = $this->db->prepare(
-            "SELECT * FROM `User` WHERE `u_id` = LAST_INSERT_ID();"
+            "SELECT * FROM `User` WHERE `u_ip` = LAST_INSERT_ID();"
         );
         $this->stmt_create = $this->db->prepare(
-            "INSERT INTO `User` (`u_name`,`u_mail`,`u_pass`) VALUES ( :name , :mail , :pass );"
+            "INSERT INTO `User` (`u_ip`,`u_name`,`u_desc`) VALUES ( :ip , :name , :desc );"
         );
         $this->stmt_update = $this->db->prepare(
-            "UPDATE `User` SET `u_name` = :name , `u_mail` = :mail , `u_pass` = :pass WHERE `u_id` = :id ;"
-        );
-        
-        $this->stmt_up_permissions = $this->db->prepare(
-            "UPDATE User SET `u_perm` = :perm WHERE `u_id` = :id ;"
+            "UPDATE `User` SET `u_name` = :name , `u_desc` = :desc WHERE `u_ip` = :id ;"
         );
     }
 
@@ -82,18 +78,19 @@ class UserManager extends BaseManager{
         return 0;
     }
 
-    public function create( string $name, string $mail, string $pass ){
+    public function create( int $id, string $name, string $desc ){
         $q = $this->stmt_create;
+        $q->bindParam(':id'  , $id  , PDO::PARAM_INT);
         $q->bindParam(':name', $name, PDO::PARAM_STR);
         $q->bindParam(':mail', $mail, PDO::PARAM_STR);
-        $q->bindParam(':pass', $pass, PDO::PARAM_STR);
         
         if( $q->execute() ){ // if insertion successful
-            $q = $this->stmt_last;
-            $q->execute();
-            if( $data = $q->fetch(PDO::FETCH_ASSOC) ){
-                return new User( $data );
-            }
+            return new User([
+                'u_id'   => $id,
+                'u_name' => $name,
+                'u_desc' => $desc,
+                'u_date' => new DateTime()
+            ]);
         }
         return NULL;
     }
@@ -102,15 +99,7 @@ class UserManager extends BaseManager{
         $q = $this->stmt_update;
         $q->bindParam(':id'  , $thread->getId  (), PDO::PARAM_INT);
         $q->bindParam(':name', $thread->getName(), PDO::PARAM_STR);
-        $q->bindParam(':mail', $thread->getMail(), PDO::PARAM_STR);
-        $q->bindParam(':pass', $thread->getPass(), PDO::PARAM_STR);
-        $q->execute();
-    }
-    
-    public function updatePermissions( User $user ){
-        $q = $this->stmt_up_permissions;
-        $q->bindParam(':id'  , $thread->getId  (), PDO::PARAM_INT);
-        $q->bindParam(':perm', $thread->getPerm(), PDO::PARAM_INT);
+        $q->bindParam(':desc', $thread->getDesc(), PDO::PARAM_STR);
         $q->execute();
     }
 
