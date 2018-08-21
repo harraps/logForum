@@ -1,6 +1,6 @@
 <?php
 
-require_once('controller/Controller.php');
+//require_once($ROOT_DIR.'controller/Controller.php');
 
 abstract class BaseObject {
 

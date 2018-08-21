@@ -1,6 +1,6 @@
 <?php
-require_once('controller/managers/BaseManager.php');
-require_once('model/Section.php');
+require_once($ROOT_DIR.'controller/managers/BaseManager.php');
+require_once($ROOT_DIR.'model/Section.php');
 
 class SectionManager extends BaseManager{
     
@@ -18,23 +18,23 @@ class SectionManager extends BaseManager{
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
-            "SELECT * FROM `Section` WHERE `s_id` = :id ;"
+            "SELECT * FROM `Section` WHERE `s_id`=:id;"
         );
         $this->stmt_inst_all = $db->prepare(
-            "SELECT * FROM `Section` ORDER BY `s_name` ASC LIMIT :start , :number ;"
+            "SELECT * FROM `Section` ORDER BY `s_name` DESC LIMIT :start,:number;"
         );
         $this->stmt_nbpg_all= $db->prepare(
-            "SELECT COUNT(*) AS `count` FROM `Section` ;"
+            "SELECT COUNT(*) AS `count` FROM `Section`;"
         );
         
         $this->stmt_last = $db->prepare(
-            "SELECT * FROM `Section` WHERE `s_id` = LAST_INSERT_ID();"
+            "SELECT * FROM `Section` WHERE `s_id`=LAST_INSERT_ID();"
         );
         $this->stmt_create = $this->db->prepare(
-            "INSERT INTO `Section` (`s_name`,`s_desc`) VALUES ( :name , :desc );"
+            "INSERT INTO `Section` (`u_ip`,`s_name`,`s_desc`) VALUES (:IP,:name,:desc);"
         );
         $this->stmt_update = $this->db->prepare(
-            "UPDATE `Section` SET `s_name` = :name , `s_desc` = :desc WHERE `s_id` = :id ;"
+            "UPDATE `Section` SET `s_name`=:name, `s_desc`=:desc WHERE `s_id`=:id ;"
         );
     }
 
@@ -65,7 +65,7 @@ class SectionManager extends BaseManager{
         return $sections;
     }
 
-    public function getNbPages( int $id ){
+    public function getNbPages(){
         $q = $this->stmt_nbpg_all;
         $q->execute();
         
@@ -75,8 +75,9 @@ class SectionManager extends BaseManager{
         return 0;
     }
 
-    public function create( string $name, string $desc ){
+    public function create( string $ip, string $name, string $desc ){
         $q = $this->stmt_create;
+        $q->bindParam(':IP'  , $ip  , PDO::PARAM_STR);
         $q->bindParam(':name', $name, PDO::PARAM_STR);
         $q->bindParam(':desc', $desc, PDO::PARAM_STR);
         
@@ -92,7 +93,6 @@ class SectionManager extends BaseManager{
 
     public function update( Section $section ){
         $q = $this->stmt_update;
-        $q->bindParam(':id'  , $section->getId         (), PDO::PARAM_INT);
         $q->bindParam(':name', $section->getName       (), PDO::PARAM_STR);
         $q->bindParam(':desc', $section->getDescription(), PDO::PARAM_STR);
         $q->execute();

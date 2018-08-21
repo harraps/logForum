@@ -66,7 +66,7 @@ body{
     padding:   0;
     margin:    0;
 }
-.panel{
+.panel {
     margin-top:    10px;
     margin-left:   auto;
     margin-right:  auto;
@@ -78,30 +78,24 @@ body{
     border-color:  black;
 }
 
+.link {
+    color: black;
+}
+.link:hover {
+    color: white;
+    background: black;
+}
+
 /* POST STYLE */
 .post .user{
-    display:        inline-block;
-    max-width:      128px;
-    width:          100%;
-    vertical-align: top;
-}
-.post .user .name{
+    border: none;
+    width: 100%;
+    border-bottom: 1px solid black;
     margin-bottom: 10px;
-    white-space:   nowrap;
-    overflow:      hidden;
-    text-overflow: ellipsis;
 }
-.post .user .date{
-    padding:     0;
-    margin:      0;
-}
-.post .text{
-    display:           inline-block;
-    padding-left:      10px;
-    border-left-width: 1px;
-    border-left-style: solid;
-    border-left-color: black;
-    vertical-align:    top;
+.post .text {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 /* THREAD STYLE */
@@ -157,8 +151,8 @@ body{
 .section-list ul li{
     padding:      0;
     margin:       2px;
-    width:        188px;
-    display:      inline-block;
+    width:        100%;
+    display:      block;
     border-width: 1px;
     border-style: solid;
     border-color: black;
@@ -222,6 +216,51 @@ body{
     color:      white;
 }
 
+/* FORM LABELS */
+.form {
+    width: 100%;
+}
+.label {
+    text-align: right;
+}
+
+/* BUTTONS */
+.button {
+    background: white;
+    color: black;
+    border: 1px solid black;
+    display: block;
+    width: 100%;
+}
+.button:hover {
+    background: black;
+    color: white;
+}
+
+/* FIELDS */
+.field {
+    background: white !important;
+    color: black;
+    border: 1px solid black;
+    width: 100%;
+}
+input:-webkit-autofill {
+    background-color: white !important;
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+.textarea {
+    border: 1px solid black;
+    width: 100%;
+    resize: vertical;
+}
+
+.show-small {
+    visibility: collapse;
+    display: none;
+    height: 0;
+}
+
 /* SUB 640PX STYLE */
 @media (max-width: 640px){
     .menu ul{
@@ -236,12 +275,6 @@ body{
         margin-left:  3px;
         margin-right: 3px;
     }
-    .post .user{
-        max-width: 64px;
-    }
-    .post .user .date{
-        font-size: 8px;
-    }
     .thread-list ul li .thread .name{
         max-width: 129px;
     }
@@ -252,10 +285,27 @@ body{
         margin-right: 5px;
     }
     .section-list ul li{
-        width: 117px;
+        width: 100%;
+        display: inline-block;
     }
-    .section-list ul li .section .info{
-        font-size: 8px;
+    
+    .form, .form tbody, .form tr, .form td {
+        width: 100%;
+        display: block;
+    }
+    .label {
+        text-align: left;
+    }
+    
+    .hide-small {
+        visibility: collapse;
+        display: none;
+        height: 0;
+    }
+    .show-small {
+        visibility: visible;
+        display: block;
+        height: auto;
     }
 }
 

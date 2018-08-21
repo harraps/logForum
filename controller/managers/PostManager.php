@@ -1,6 +1,6 @@
 <?php
-require_once('controller/managers/BaseManager.php');
-require_once('model/Post.php');
+require_once($ROOT_DIR.'controller/managers/BaseManager.php');
+require_once($ROOT_DIR.'model/Post.php');
 
 class PostManager extends BaseManager{
     
@@ -20,27 +20,27 @@ class PostManager extends BaseManager{
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
-            "SELECT * FROM `Post` WHERE `p_id` = :id ;"
+            "SELECT * FROM `Post` WHERE `p_id`=:id ;"
         );
         $this->stmt_inst_select = $this->db->prepare(
-            "SELECT * FROM `Post` WHERE `t_id` = :id ORDER BY `p_date` ASC LIMIT :start , :number ;"
+            "SELECT * FROM `Post` WHERE `t_id`=:id ORDER BY `p_date` ASC LIMIT :start,:number;"
         );
         $this->stmt_nbpg_select = $this->db->prepare(
-            "SELECT COUNT(*) AS `count` FROM `Post` WHERE `t_id` = :id ;"
+            "SELECT COUNT(*) AS `count` FROM `Post` WHERE `t_id`=:id;"
         );
         
         $this->stmt_last = $this->db->prepare(
-            "SELECT * FROM `Post` WHERE `p_id` = LAST_INSERT_ID();"
+            "SELECT * FROM `Post` WHERE `p_id`=LAST_INSERT_ID();"
         );
         $this->stmt_create = $this->db->prepare(
-            "INSERT INTO `Post` (`u_ip`,`t_id`,`p_text`) VALUES ( :userId , :threadId , :text );"
+            "INSERT INTO `Post` (`u_ip`,`t_id`,`p_text`) VALUES (:IP,:id,:text);"
         );
         $this->stmt_update = $this->db->prepare(
-            "UPDATE `Post` SET `p_text` = :text WHERE `p_id` = :id ;"
+            "UPDATE `Post` SET `p_text`=:text WHERE `p_id`=:id;"
         );
         
         $this->stmt_up_thread = $this->db->prepare(
-            "UPDATE `Thread` SET `t_date` = CURRENT_TIMESTAMP WHERE `t_id` = :id ;"
+            "UPDATE `Thread` SET `t_date`=CURRENT_TIMESTAMP WHERE `t_id`=:id ;"
         );
     }
 
@@ -83,11 +83,11 @@ class PostManager extends BaseManager{
         return 0;
     }
 
-    public function create( int $u_id, int $t_id, string $text ){
+    public function create( string $ip, int $t_id, string $text ){
         $q = $this->stmt_create;
-        $q->bindParam(':userId'  , $u_id, PDO::PARAM_INT);
-        $q->bindParam(':threadId', $t_id, PDO::PARAM_INT);
-        $q->bindParam(':text'    , $text, PDO::PARAM_STR);
+        $q->bindParam(':IP'  , $ip  , PDO::PARAM_STR);
+        $q->bindParam(':id'  , $t_id, PDO::PARAM_INT);
+        $q->bindParam(':text', $text, PDO::PARAM_STR);
         
         if( $q->execute() ){ // if insertion successful
             // update the date of the thread

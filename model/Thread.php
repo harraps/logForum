@@ -1,14 +1,14 @@
 <?php
-require_once('model/BaseObject.php');
+require_once($ROOT_DIR.'model/BaseObject.php');
 
 class Thread extends BaseObject{
 
-    private $u_id; // int      : the id of the user who created this thread
+    private $u_ip; // int      : the ip of the user who created this thread
     private $s_id; // int      : the id of the section in which the thread has been created
     private $name; // string   : the name of the thread
     private $date; // DateTime : the date of the last post on the thread
 
-    protected function setUserId   ( $id    ){ $this->u_id = (int)    $id;    }
+    protected function setUserIp   ( $ip    ){ $this->u_ip = (string) $ip;    }
     protected function setSectionId( $id    ){ $this->s_id = (int)    $id;    }
     protected function setName     ( $name  ){ $this->name = (string) $name;  }
     protected function setDate( $date ){
@@ -21,7 +21,7 @@ class Thread extends BaseObject{
     // constructor to recover thread from database
     public function __construct( array $data ){
         $this->setId       ( $data['t_id'  ] );
-        $this->setUserId   ( $data['u_ip'  ] );
+        $this->setUserIp   ( $data['u_ip'  ] );
         $this->setSectionId( $data['s_id'  ] );
         $this->setName     ( $data['t_name'] );
         $this->setDate     ( $data['t_date'] );
@@ -33,19 +33,11 @@ class Thread extends BaseObject{
             ->update( $this );
     }
     
-    public function getUserId   () : int      { return $this->u_id; }
+    public function getUserIp   () : string   { return $this->u_ip; }
     public function getSectionId() : int      { return $this->s_id; }
     public function getName     () : string   { return $this->name; }
     public function getDate     () : DateTime { return $this->date; }
 
-    // return the user who created this thread
-    public function getUser() : User {
-        global $CONTROLLER;
-        $id = $this->u_id ?: -1;
-        return $CONTROLLER
-            ->getUserManager()
-            ->getUser($id);
-    }
     // return the section in which this thread has been created
     public function getSection() : Section {
         global $CONTROLLER;

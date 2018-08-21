@@ -1,6 +1,6 @@
 <?php
-require_once('controller/managers/BaseManager.php');
-require_once('model/Thread.php');
+require_once($ROOT_DIR.'controller/managers/BaseManager.php');
+require_once($ROOT_DIR.'model/Thread.php');
 
 class ThreadManager extends BaseManager{
     
@@ -18,23 +18,23 @@ class ThreadManager extends BaseManager{
         
         // statements initialization
         $this->stmt_inst = $this->db->prepare(
-            "SELECT * FROM `Thread` WHERE `t_id` = :id ;"
+            "SELECT * FROM `Thread` WHERE `t_id`=:id ;"
         );
         $this->stmt_inst_select = $this->db->prepare(
-            "SELECT * FROM `Thread` WHERE `s_id` = :id ORDER BY `t_date` ASC LIMIT :start , :number ;"
+            "SELECT * FROM `Thread` WHERE `s_id`=:id ORDER BY `t_date` DESC LIMIT :start,:number;"
         );
         $this->stmt_nbpg_select = $this->db->prepare(
-            "SELECT COUNT(*) AS `count` FROM `Thread` WHERE `s_id` = :id ;"
+            "SELECT COUNT(*) AS `count` FROM `Thread` WHERE `s_id`=:id ;"
         );
         
         $this->stmt_last = $this->db->prepare(
-            "SELECT * FROM `Thread` WHERE `t_id` = LAST_INSERT_ID();"
+            "SELECT * FROM `Thread` WHERE `t_id`=LAST_INSERT_ID();"
         );
         $this->stmt_create = $this->db->prepare(
-            "INSERT INTO `Thread` (`u_ip`,`t_name`) VALUES ( :userId , :name );"
+            "INSERT INTO `Thread` (`u_ip`,`s_id`,`t_name`) VALUES (:IP,:id,:name);"
         );
         $this->stmt_update = $this->db->prepare(
-            "UPDATE `Thread` SET `t_name` = :name WHERE `t_id` = :id ;"
+            "UPDATE `Thread` SET `t_name`=:name WHERE `t_id`=:id;"
         );
     }
 
@@ -67,7 +67,7 @@ class ThreadManager extends BaseManager{
     }
 
     public function getNbPagesFromSection( int $id ){
-        $q = $this->stmt_nbpg_selected;
+        $q = $this->stmt_nbpg_select;
         $q->bindParam(':id', $id, PDO::PARAM_INT);
         $q->execute();
         
@@ -77,10 +77,11 @@ class ThreadManager extends BaseManager{
         return 0;
     }
 
-    public function create( int $u_id, string $name ){
+    public function create( string $ip, int $s_id, string $name ){
         $q = $this->stmt_create;
-        $q->bindParam(':userId', $u_id, PDO::PARAM_INT);
-        $q->bindParam(':name'  , $name, PDO::PARAM_STR);
+        $q->bindParam(':IP'  , $ip  , PDO::PARAM_STR);
+        $q->bindParam(':id'  , $s_id, PDO::PARAM_INT);
+        $q->bindParam(':name', $name, PDO::PARAM_STR);
         
         if( $q->execute() ){ // if insertion successful
             $q = $this->stmt_last;
